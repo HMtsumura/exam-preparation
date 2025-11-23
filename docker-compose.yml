@@ -10,7 +10,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/var/www/html
+      - ./frontend:/app
+      - /app/node_modules
     command: npm run dev
     networks:
       - app-network
