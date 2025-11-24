@@ -1,29 +1,26 @@
-"use client"; // クライアントサイドで fetch する場合必須
+import Link from 'next/link';
 
-import { useEffect, useState } from "react";
+type Exam = {
+  id: number;
+  examName: string;
+};
 
-export default function HomePage() {
-  const [backendData, setBackendData] = useState<string>("");
+const dummyExams: Exam[] = [
+  { id: 1, examName: '試験A' },
+  { id: 2, examName: '試験B' },
+];
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/test"); // API Route を呼ぶ
-        console.log(res);
-        const data = await res.json();
-        setBackendData(data.backend || JSON.stringify(data));
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    fetchData();
-  }, []);
-
+export default function MainPage() {
   return (
     <div>
-      <h1>Backend Response:</h1>
-      <pre>{backendData}</pre>
+      <h1>試験一覧</h1>
+      <ul>
+        {dummyExams.map((exam) => (
+          <li key={exam.id}>
+            <Link href={`/exams/${exam.id}`}>{exam.examName}</Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
