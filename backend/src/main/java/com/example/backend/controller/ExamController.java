@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
+import com.example.backend.entity.Book;
 import com.example.backend.entity.Exam;
+import com.example.backend.repository.BookRepository;
 import com.example.backend.repository.ExamRepository;
 import com.example.backend.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class ExamController {
     @Autowired
     private ExamRepository examRepository;
 
+    @Autowired
+    private BookRepository bookRepository;
+
     public ExamController(ExamService examService) {
         this.examService = examService;
     }
@@ -40,5 +45,10 @@ public class ExamController {
 
         // 試験が存在しない場合は 404
         return examOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{examId}/books")
+    public List<Book> getBooksByExamId(@PathVariable Integer examId) {
+        return bookRepository.findByExamId(examId);
     }
 }
