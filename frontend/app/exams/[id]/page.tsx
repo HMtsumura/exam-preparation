@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 // app/exams/[id]/page.tsx
 type Exam = {
   id: number;
@@ -7,14 +9,22 @@ type Exam = {
   status: string;
 };
 
+type Book = {
+  id: number;
+  bookName: string;
+};
+
 interface Props {
-  params: Promise<{ id: string }>;  // 👈 ここ重要：Promise
+  params: Promise<{ id: string }>;
 }
 
 export default async function ExamDetailPage({ params }: Props) {
   const { id } = await params;
-  const res = await fetch(`http://localhost:3000/api/exams/${id}`);
-  const exam: Exam = await res.json();
+  const examRes = await fetch(`http://localhost:3000/api/exams/${id}`);
+  const exam: Exam = await examRes.json();
+
+  const booksRes = await fetch(`http://localhost:3000/api/exams/${id}/books`);
+  const books: Book[] = await booksRes.json();
 
   return (
     <div>
@@ -22,6 +32,14 @@ export default async function ExamDetailPage({ params }: Props) {
       <p>ID: {exam.id}</p>
       <p>試験名: {exam.examName}</p>
       <p>試験日: {exam.examDate}</p>
+
+      <h2>この試験で使う本</h2>
+      <ul>
+        {books.map((book) => (
+          <Link href={`/books/${book.id}`}>{book.bookName}</Link>
+        ))}
+      </ul>
+      
     </div>
   );
 }
