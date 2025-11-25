@@ -36,7 +36,9 @@ export default async function ExamDetailPage({ params }: Props) {
       <h2>この試験で使う本</h2>
       <ul>
         {books.map((book) => (
-          <Link href={`/books/${book.id}`}>{book.bookName}</Link>
+          <li key={book.id}> 
+            <Link href={`/books/${book.id}`}>{book.bookName}</Link>
+          </li>
         ))}
       </ul>
       
