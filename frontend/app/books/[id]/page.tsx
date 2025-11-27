@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ChapterList from "./ChapterList";
 
 // app/books/[id]/page.tsx
 type Book = {
@@ -26,19 +26,11 @@ export default async function BookDetailPage({ params }: Props) {
 
   return (
     <div>
-      <h1>参考書詳細</h1>
-      <p>ID: {book.id}</p>
-      <p>試験名: {book.bookName}</p>
+        <h1>参考書詳細</h1>
+        <p>ID: {book.id}</p>
+        <p>試験名: {book.bookName}</p>
 
-      <h2>章</h2>
-      <ul>
-        {chapters.map((chapter) => (
-          <li> 
-            <Link href={`/chapters/${chapter.id}`}>{chapter.chapterTitle}</Link>
-          </li>
-        ))}
-      </ul>
-      
+         <ChapterList initialChapters={chapters} bookId={book.id}/>
     </div>
   );
 }
