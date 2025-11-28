@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 type Chapter = {
   id: number;
   chapterTitle: string;
+  progressPercent: number;
 };
 
 export default function ChapterList({ initialChapters, bookId }: { initialChapters: Chapter[], bookId: number }) {
@@ -45,6 +48,18 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
             <Link href={`/chapters/${chapter.id}`}>
               {chapter.chapterTitle}
             </Link>
+            <div className="w-12 h-12">
+                <CircularProgressbar
+                    value={chapter.progressPercent ?? 0}
+                    text={`${chapter.progressPercent ?? 0}%`}
+                    styles={buildStyles({
+                        textSize: '30px',
+                        pathColor: `#3b82f6`, // 青色
+                        textColor: '#ffffffff',
+                        trailColor: '#e5e7eb', // 薄いグレー
+                    })}
+                />
+            </div>
           </li>
         ))}
       </ul>
