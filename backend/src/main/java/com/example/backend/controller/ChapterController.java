@@ -1,12 +1,16 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.ChapterWithStatusDto;
+import com.example.backend.dto.ProgressUpdateRequest;
+import com.example.backend.dto.StudyLogRequest;
 import com.example.backend.entity.Book;
 import com.example.backend.entity.Chapter;
 import com.example.backend.repository.BookRepository;
 import com.example.backend.repository.ChapterRepository;
 import com.example.backend.service.BookService;
 import com.example.backend.service.ChapterService;
+import com.example.backend.service.ChapterStatusService;
+import com.example.backend.service.StudyLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +28,11 @@ public class ChapterController {
     @Autowired
     private ChapterService chapterService;
 
+    @Autowired
+    private ChapterStatusService chapterStatusService;
 
+    @Autowired
+    private StudyLogService studyLogService;
 
     @Autowired
     private BookRepository bookRepository;
@@ -34,9 +42,15 @@ public class ChapterController {
         return chapterService.getChaptersWithStatus(bookId);
     }
 
+    @GetMapping("{bookId}/chapters/{chapterId}")
+    public ChapterWithStatusDto getChapter(@PathVariable Integer chapterId) {
+        return chapterService.getChapterWithStatus(chapterId);
+    }
+
     @PostMapping("/{bookId}/chapters")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Chapter> addChapter(@PathVariable Integer bookId, @RequestBody Chapter request) {
+        // TODO Serviceに移動
         Optional<Book> bookOpt = bookRepository.findById(bookId);
         if (bookOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -50,4 +64,5 @@ public class ChapterController {
         Chapter saved = chapterRepository.save(chapter);
         return ResponseEntity.ok(saved);
     }
+
 }

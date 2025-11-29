@@ -1,28 +1,17 @@
 import { NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const backendUrl = `http://backend:8080/api/books/${(await params).id}/chapters`;
-  const res = await fetch(backendUrl);
-  const data = await res.json();
-
-  return NextResponse.json(data);
-}
-
 export async function POST(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { chapterTitle } = await req.json();
+  const { durationMinutes, notes } = await req.json();
 
   try {
-    const res = await fetch(`http://backend:8080/api/books/${id}/chapters`, {
+    const res = await fetch(`http://backend:8080/api/chapters/${id}/study_logs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chapterTitle }),
+      body: JSON.stringify({ durationMinutes, notes }),
     });
 
     if (!res.ok) {

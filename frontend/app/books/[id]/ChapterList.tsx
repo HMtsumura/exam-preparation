@@ -50,20 +50,33 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
     setDialogOpen(true);
   };
 
-  const handleSaveRecord = async (progress: number, duration: number, notes: string) => {
+  const handleSaveRecord = async (progress: number, durationMinutes: number, notes: string) => {
     if (!currentChapter) return;
 
-    // API に POST
-    await fetch(`/api/study_logs`, {
+    await fetch(`http://localhost:3000/api/chapters/${currentChapter.id}/study_logs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chapterId: currentChapter.id,
-        progress,
-        duration,
-        notes,
+        durationMinutes,
+        notes
       }),
     });
+
+    await fetch(`http://localhost:3000/api/chapters/${currentChapter.id}/progress`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        progress
+      }),
+    });
+
+    const updated = await fetch(`http://localhost:3000/api/books/${bookId}/chapters/${currentChapter.id}`)
+    .then((r) => r.json());
+    console.log(updated)
+
+    setChapters((prev) =>
+      prev.map((ch) =>ch.id === updated.id ? updated : ch
+    ));
     // 必要なら状態更新
     setDialogOpen(false);
   };
