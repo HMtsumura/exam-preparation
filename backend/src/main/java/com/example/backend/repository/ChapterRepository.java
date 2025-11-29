@@ -15,13 +15,18 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
         SELECT new com.example.backend.dto.ChapterWithStatusDto(
             c.id,
             c.chapterTitle,
-            cs.progressPercent
+            cs.progressPercent,
+            COALESCE(SUM(sl.durationMinutes),0)
         )
         FROM Chapter c
         LEFT JOIN ChapterStatus cs
             ON c.id = cs.chapterId
+        LEFT JOIN StudyLog sl
+            ON c.id = sl.chapterId
         WHERE c.bookId = :bookId
+        GROUP BY c.id, cs.progressPercent, c.chapterTitle
         ORDER BY c.id
+        
         """)
     List<ChapterWithStatusDto> findChaptersWithStatus(
             @Param("bookId") Integer bookId

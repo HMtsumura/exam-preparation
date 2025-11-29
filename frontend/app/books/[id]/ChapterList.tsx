@@ -9,6 +9,7 @@ type Chapter = {
   id: number;
   chapterTitle: string;
   progressPercent: number;
+  totalStudyTime: number;
 };
 
 export default function ChapterList({ initialChapters, bookId }: { initialChapters: Chapter[], bookId: number }) {
@@ -60,6 +61,7 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
                     })}
                 />
             </div>
+            <div>合計学習時間 {chapter.totalStudyTime}</div>
           </li>
         ))}
       </ul>

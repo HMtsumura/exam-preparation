@@ -9,4 +9,5 @@ public class ChapterWithStatusDto {
     private Integer id;
     private String chapterTitle;
     private Integer progressPercent;
+    private Long totalStudyTime;
 }

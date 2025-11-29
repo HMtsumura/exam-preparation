@@ -31,4 +31,12 @@ public class ChapterStatus {
 
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chapter_id", insertable = false, updatable = false)
+    private Chapter chapter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
 }

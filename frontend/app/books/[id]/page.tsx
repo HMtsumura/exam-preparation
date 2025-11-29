@@ -9,7 +9,8 @@ type Book = {
 type Chapter = {
   id: number;
   chapterTitle: string;
-  progressPercent: number
+  progressPercent: number;
+  totalStudyTime: number;
 };
 
 interface Props {
@@ -24,7 +25,7 @@ export default async function BookDetailPage({ params }: Props) {
 
   const chaptersRes = await fetch(`http://localhost:3000/api/books/${id}/chapters`);
   const chapters: Chapter[] = await chaptersRes.json();
-
+    console.log(chapters)
   return (
     <div>
         <h1>参考書詳細</h1>

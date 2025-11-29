@@ -28,4 +28,12 @@ public class StudyLog {
 
     @Column(name = "notes")
     private String notes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chapter_id", insertable = false, updatable = false)
+    private Chapter chapter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
 }
