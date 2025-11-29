@@ -25,3 +25,12 @@ VALUES
 (3, 'Part 1: Getting Started', 1),
 (3, 'Part 2: Component Design', 2),
 (3, 'Part 3: State Management', 3);
+
+INSERT INTO chapter_status
+    (user_id, chapter_id, progress_percent, last_studied, created_at, updated_at)
+VALUES
+    (1, 1, 0, NOW(), NOW(), NOW()),
+    (1, 2, 20, NOW(), NOW(), NOW()),
+    (1, 3, 40, NOW(), NOW(), NOW()),
+    (1, 4, 60, NOW(), NOW(), NOW()),
+    (1, 5, 80, NOW(), NOW(), NOW());

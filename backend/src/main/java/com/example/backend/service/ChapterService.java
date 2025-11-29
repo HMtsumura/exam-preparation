@@ -1,22 +1,23 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.ChapterWithStatusDto;
 import com.example.backend.entity.Book;
 import com.example.backend.repository.BookRepository;
+import com.example.backend.repository.ChapterRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookService {
+public class ChapterService {
 
-    private final BookRepository bookRepository;
+    private final ChapterRepository chapterRepository;
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    public ChapterService(ChapterRepository chapterRepository) {
+        this.chapterRepository = chapterRepository;
     }
-
-    public Optional<Book> getBookById(Integer bookId) {
-        return bookRepository.findById(bookId);
+    public List<ChapterWithStatusDto> getChaptersWithStatus(Integer bookId) {
+        return chapterRepository.findChaptersWithStatus(bookId);
     }
 }

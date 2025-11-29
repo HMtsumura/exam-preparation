@@ -53,6 +53,6 @@ task generateMyBatis(type: Exec) {
     commandLine 'java',
             '-cp', "${mbgJar}:${mysqlJar}:${sourceSets.main.runtimeClasspath.asPath}",
             'org.mybatis.generator.api.ShellRunner',
-            '-configfile', "${projectDir}/src/main/resources/generatorConfigi.xml",
+            '-configfile', "${projectDir}/src/main/resources/generatorConfig.xml",
             '-overwrite'
 }

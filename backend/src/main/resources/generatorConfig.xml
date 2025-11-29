@@ -25,29 +25,34 @@
                              targetProject="src/main/java"/>
 
         <!-- users テーブル -->
-        <table tableName="users" domainObjectName="User">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="users" domainObjectName="User">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 
         <!-- exams テーブル -->
-        <table tableName="exams" domainObjectName="Exam">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="exams" domainObjectName="Exam">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 
         <!-- books テーブル -->
-        <table tableName="books" domainObjectName="Book">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="books" domainObjectName="Book">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 
         <!-- chapters テーブル -->
-        <table tableName="chapters" domainObjectName="Chapter">
+<!--        <table tableName="chapters" domainObjectName="Chapter">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+
+        <!-- chapter_status テーブル -->
+        <table tableName="chapter_status" domainObjectName="ChapterStatus">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
         <!-- study_logs テーブル -->
-        <table tableName="study_logs" domainObjectName="StudyLog">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="study_logs" domainObjectName="StudyLog">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 
     </context>
 </generatorConfiguration>

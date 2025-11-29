@@ -9,7 +9,7 @@ type Book = {
 type Chapter = {
   id: number;
   chapterTitle: string;
-  progressPercent: number;
+  progressPercent: number
 };
 
 interface Props {
