@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import StudyRecordDialog from "./StudyRecordDialog";
 
 type Chapter = {
   id: number;
@@ -17,6 +18,9 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
   const [chapters, setChapters] = useState<Chapter[]>(initialChapters);
   const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentChapter, setCurrentChapter] = useState<{ id: number, title: string, progressPercent: number } | null>(null);
+  const [progress, setProgress] = useState(0);
 
   const handleAdd = async () => {
     if (!newTitle.trim()) return;
@@ -40,6 +44,29 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
     setIsAdding(false);
   };
 
+  const handleRecordClick = (chapter: { id: number, title: string, progressPercent: number }) => {
+    setCurrentChapter(chapter);
+    setProgress(chapter.progressPercent);
+    setDialogOpen(true);
+  };
+
+  const handleSaveRecord = async (progress: number, duration: number, notes: string) => {
+    if (!currentChapter) return;
+
+    // API に POST
+    await fetch(`/api/study_logs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chapterId: currentChapter.id,
+        progress,
+        duration,
+        notes,
+      }),
+    });
+    // 必要なら状態更新
+    setDialogOpen(false);
+  };
   return (
     <div>
       <h2 className="text-xl font-semibold mt-4">章</h2>
@@ -63,10 +90,24 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
                 />
             </div>
             <div>合計学習時間: {chapter.formattedTime}</div>
+            <button 
+              className="px-2 py-1 bg-blue-500 text-white rounded"
+              onClick={() => handleRecordClick({ id: chapter.id, title: chapter.chapterTitle, progressPercent: chapter.progressPercent })}
+            >
+              記録
+            </button>
           </li>
         ))}
       </ul>
-
+      {currentChapter && (
+        <StudyRecordDialog 
+          chapterTitle={currentChapter.title}
+          progressPercent={progress}
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          onSave={handleSaveRecord}
+        />
+      )}
       {/* 章追加 UI */}
       {isAdding ? (
         <div className="flex gap-2 mt-4">
