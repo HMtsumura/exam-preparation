@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import StudyRecordDialog from "./StudyRecordDialog";
+import { DeleteChapterButton } from "./DeleteChapterButton";
 
 type Chapter = {
   id: number;
@@ -80,6 +81,13 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
     // 必要なら状態更新
     setDialogOpen(false);
   };
+
+  const fetchChapters = async ()=>{
+    const res = await fetch(`http://localhost:3000/api/books/${bookId}/chapters`);
+    const data = await res.json();
+    setChapters(data);
+  };
+  
   return (
     <div>
       <h2 className="text-xl font-semibold mt-4">章</h2>
@@ -109,6 +117,10 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
             >
               記録
             </button>
+            <DeleteChapterButton
+              chapterId={chapter.id}
+              onDeleted={() => fetchChapters()}  // 再取得
+            />
           </li>
         ))}
       </ul>

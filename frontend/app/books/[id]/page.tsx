@@ -20,7 +20,7 @@ interface Props {
 
 export default async function BookDetailPage({ params }: Props) {
   const { id } = await params;
-  
+
   const bookRes = await fetch(`http://localhost:3000/api/books/${id}`);
   const book: Book = await bookRes.json();
 
