@@ -11,6 +11,7 @@ import com.example.backend.repository.BookRepository;
 import com.example.backend.repository.ChapterRepository;
 import com.example.backend.repository.ChapterStatusRepository;
 import com.example.backend.repository.StudyLogRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,5 +77,13 @@ public class ChapterService {
         } else {
             return hours + "時間" + mins + "分";
         }
+    }
+
+    public void deleteChapterById(Integer chapterId) {
+        if (!chapterRepository.existsById(chapterId)) {
+            throw new EntityNotFoundException("Chapter not found with id = " + chapterId);
+        }
+
+        chapterRepository.deleteById(chapterId);
     }
 }

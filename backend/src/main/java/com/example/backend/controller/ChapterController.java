@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api")
 public class ChapterController {
 
     @Autowired
@@ -37,17 +37,17 @@ public class ChapterController {
     @Autowired
     private BookRepository bookRepository;
 
-    @GetMapping("/{bookId}/chapters")
+    @GetMapping("/books/{bookId}/chapters")
     public List<ChapterWithStatusDto> getChaptersByBookId(@PathVariable Integer bookId) {
         return chapterService.getChaptersWithStatus(bookId);
     }
 
-    @GetMapping("{bookId}/chapters/{chapterId}")
+    @GetMapping("/books/{bookId}/chapters/{chapterId}")
     public ChapterWithStatusDto getChapter(@PathVariable Integer chapterId) {
         return chapterService.getChapterWithStatus(chapterId);
     }
 
-    @PostMapping("/{bookId}/chapters")
+    @PostMapping("/books/{bookId}/chapters")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Chapter> addChapter(@PathVariable Integer bookId, @RequestBody Chapter request) {
         // TODO Serviceに移動
@@ -65,4 +65,9 @@ public class ChapterController {
         return ResponseEntity.ok(saved);
     }
 
+    @DeleteMapping("/chapters/{chapterId}")
+    public ResponseEntity<Void> deleteChapter(@PathVariable Integer chapterId) {
+        chapterService.deleteChapterById(chapterId);
+        return ResponseEntity.noContent().build();
+    }
 }
