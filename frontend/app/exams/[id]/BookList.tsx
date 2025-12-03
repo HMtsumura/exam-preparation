@@ -32,6 +32,10 @@ export default function BookList({ initialBooks, examId }: { initialBooks: Book[
     const data = await res.json();
     setBooks(data);
   };
+
+  const handleCreated = async (book: Book)=>{
+    setBooks((prev) => [...prev, book]);
+  };
   
   return (
     <ul>
@@ -42,8 +46,9 @@ export default function BookList({ initialBooks, examId }: { initialBooks: Book[
         ))}
         <BookCreateDialog
           examId={examId}
-          onCreated={(bookId) => {
-          console.log("新しく作成された Book ID:", bookId);
+          onCreated={(book) => {
+             console.log("新しく作成された Book ID:", book);
+            handleCreated(book);
           }}
         />
     </ul>

@@ -1,17 +1,13 @@
 import { NextResponse } from "next/server";
 
-export async function POST(
-    req: Request,
-    { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  const { examId, name } = await req.json();
+export async function POST(req: Request) {
+  const { examId, bookName } = await req.json();
 
   try {
     const res = await fetch(`http://backend:8080/api/books`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ examId, name }),
+      body: JSON.stringify({ examId, bookName }),
     });
 
     if (!res.ok) {

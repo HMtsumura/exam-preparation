@@ -5,15 +5,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function BookCreateDialog({ examId, onCreated }: { examId: number; onCreated: (bookId: number) => void }) {
+type Book = {
+  id: number;
+  bookName: string;
+};
+
+
+export default function BookCreateDialog({ examId, onCreated }: { examId: number; onCreated: (book: Book) => void }) {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
+  const [bookName, setbookName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
   async function handleCreate() {
     const res = await fetch("http://localhost:3000/api/books", {
       method: "POST",
-      body: JSON.stringify({ examId, name }),
+      body: JSON.stringify({ examId, bookName }),
       headers: { "Content-Type": "application/json" },
     });
 
@@ -25,7 +31,7 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
     const book = await res.json();
 
     setOpen(false); // このダイアログを閉じる
-    onCreated(book.id); // 作成された bookId を親へ通知
+    onCreated(book); // 作成された bookId を親へ通知
   }
 
   return (
@@ -44,8 +50,8 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
         <div className="space-y-4">
           <Input
             placeholder="書籍名"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={bookName}
+            onChange={(e) => setbookName(e.target.value)}
           />
 
           <Input
