@@ -1,0 +1,62 @@
+"use client";
+
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+export default function BookCreateDialog({ examId, onCreated }: { examId: number; onCreated: (bookId: number) => void }) {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+
+  async function handleCreate() {
+    const res = await fetch("/api/books", {
+      method: "POST",
+      body: JSON.stringify({ examId, name, imageUrl }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!res.ok) {
+      alert("書籍の作成に失敗しました");
+      return;
+    }
+
+    const book = await res.json();
+
+    setOpen(false); // このダイアログを閉じる
+    onCreated(book.id); // 作成された bookId を親へ通知
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>+ 書籍を追加</Button>
+      </DialogTrigger>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>書籍を追加</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <Input
+            placeholder="書籍名"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            placeholder="参考書の画像 URL（任意）"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+          />
+
+          <Button className="w-full" onClick={handleCreate}>
+            作成する
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
