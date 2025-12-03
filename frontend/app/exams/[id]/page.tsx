@@ -1,4 +1,7 @@
+
 import Link from "next/link";
+import BookCreateDialog from "./BookCreateDialog";
+import BookList from "./BookList";
 
 // app/exams/[id]/page.tsx
 type Exam = {
@@ -19,6 +22,7 @@ interface Props {
 }
 
 export default async function ExamDetailPage({ params }: Props) {
+
   const { id } = await params;
   const examRes = await fetch(`http://localhost:3000/api/exams/${id}`);
   const exam: Exam = await examRes.json();
@@ -34,14 +38,7 @@ export default async function ExamDetailPage({ params }: Props) {
       <p>試験日: {exam.examDate}</p>
 
       <h2>この試験で使う本</h2>
-      <ul>
-        {books.map((book) => (
-          <li key={book.id}> 
-            <Link href={`/books/${book.id}`}>{book.bookName}</Link>
-          </li>
-        ))}
-      </ul>
-      
+      <BookList initialBooks={books} examId={exam.id}/>      
     </div>
   );
 }

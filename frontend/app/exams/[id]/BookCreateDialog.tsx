@@ -29,11 +29,13 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
   }
 
   return (
+    <>
+        <Button
+            onClick={() => setOpen(true)}
+        >
+            + 書籍を追加
+    </Button>
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>+ 書籍を追加</Button>
-      </DialogTrigger>
-
       <DialogContent>
         <DialogHeader>
           <DialogTitle>書籍を追加</DialogTitle>
@@ -58,5 +60,6 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
         </div>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
