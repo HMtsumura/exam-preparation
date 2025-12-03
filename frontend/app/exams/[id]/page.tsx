@@ -1,6 +1,3 @@
-
-import Link from "next/link";
-import BookCreateDialog from "./BookCreateDialog";
 import BookList from "./BookList";
 
 // app/exams/[id]/page.tsx

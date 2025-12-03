@@ -11,9 +11,9 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
   const [imageUrl, setImageUrl] = useState("");
 
   async function handleCreate() {
-    const res = await fetch("/api/books", {
+    const res = await fetch("http://localhost:3000/api/books", {
       method: "POST",
-      body: JSON.stringify({ examId, name, imageUrl }),
+      body: JSON.stringify({ examId, name }),
       headers: { "Content-Type": "application/json" },
     });
 
