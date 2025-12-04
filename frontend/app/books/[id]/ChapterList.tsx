@@ -22,6 +22,7 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentChapter, setCurrentChapter] = useState<{ id: number, title: string, progressPercent: number } | null>(null);
   const [progress, setProgress] = useState(0);
+  const [currentBookId, setCurrentBookId] = useState(bookId);
 
   const handleAdd = async () => {
     if (!newTitle.trim()) return;

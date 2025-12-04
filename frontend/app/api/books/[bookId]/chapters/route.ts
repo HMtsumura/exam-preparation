@@ -13,13 +13,13 @@ export async function GET(
 
 export async function POST(
     req: Request,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: Promise<{ bookId: string }> }
 ) {
-  const { id } = await params;
+  const { bookId } = await params;
   const { chapterTitle } = await req.json();
 
   try {
-    const res = await fetch(`http://backend:8080/api/books/${id}/chapters`, {
+    const res = await fetch(`http://backend:8080/api/books/${bookId}/chapters`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chapterTitle }),
