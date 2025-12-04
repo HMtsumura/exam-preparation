@@ -15,7 +15,6 @@ export default function ChapterCreateDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const [title, setTitle] = useState("");
-  const [currentBookId, setCurrentBookId] = useState(bookId);
 
   const handleCreate = async () => {
     if (!bookId) return;
