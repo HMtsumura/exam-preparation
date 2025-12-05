@@ -106,7 +106,7 @@ export default function ChapterList({ initialChapters, bookId }: { initialChapte
                     styles={buildStyles({
                         textSize: '30px',
                         pathColor: `#3b82f6`, // 青色
-                        textColor: '#ffffffff',
+                        textColor: '#000000ff',
                         trailColor: '#e5e7eb', // 薄いグレー
                     })}
                 />

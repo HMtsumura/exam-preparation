@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import ImagePicker from "./ImagePicker";
 
 type Book = {
   id: number;
@@ -48,16 +49,16 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
         </DialogHeader>
 
         <div className="space-y-4">
+          <div className="flex justify-center">
+            <ImagePicker
+              imageUrl={imageUrl}
+              onChange={setImageUrl}
+            />
+          </div>
           <Input
             placeholder="書籍名"
             value={bookName}
             onChange={(e) => setbookName(e.target.value)}
-          />
-
-          <Input
-            placeholder="参考書の画像 URL（任意）"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
           />
 
           <Button className="w-full" onClick={handleCreate}>
