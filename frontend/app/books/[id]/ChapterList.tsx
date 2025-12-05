@@ -6,6 +6,9 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import StudyRecordDialog from "./StudyRecordDialog";
 import { DeleteChapterButton } from "./DeleteChapterButton";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Pencil, Plus } from "lucide-react";
 
 type Chapter = {
   id: number;
@@ -28,7 +31,7 @@ export default function ChapterList({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentChapter, setCurrentChapter] = useState<{
     id: number;
-    title: string;
+    chapterTitle: string;
     progressPercent: number;
   } | null>(null);
   const [progress, setProgress] = useState(0);
@@ -61,7 +64,7 @@ export default function ChapterList({
 
   const handleRecordClick = (chapter: {
     id: number;
-    title: string;
+    chapterTitle: string;
     progressPercent: number;
   }) => {
     setCurrentChapter(chapter);
@@ -120,108 +123,94 @@ export default function ChapterList({
   };
 
   return (
-    <div className="mt-6">
-      <h2 className="text-2xl font-bold mb-4">章一覧</h2>
-
-      <div className="space-y-4">
-        {chapters.map((chapter) => (
-          <div
-            key={chapter.id}
-            className="flex items-center justify-between p-4 bg-white rounded-xl shadow hover:shadow-md transition"
-          >
-            {/* 左側：タイトル + 学習時間 */}
-            <div className="flex flex-col">
-              <Link
-                href={`/chapters/${chapter.id}`}
-                className="text-lg font-semibold hover:underline"
-              >
-                {chapter.chapterTitle}
-              </Link>
-
-              <span className="text-sm text-gray-600 mt-1">
-                合計学習時間: {chapter.formattedTime}
-              </span>
-            </div>
-
-            {/* 右側：進捗とボタン */}
-            <div className="flex items-center gap-4">
-              {/* 進捗丸 */}
-              <div className="w-14 h-14">
-                <CircularProgressbar
-                  value={chapter.progressPercent ?? 0}
-                  text={`${chapter.progressPercent ?? 0}%`}
-                  styles={buildStyles({
-                    textSize: "28px",
-                    pathColor: "#3b82f6",
-                    textColor: "#000",
-                    trailColor: "#e5e7eb",
-                  })}
-                />
-              </div>
-
-              {/* アクション */}
-              <div className="flex flex-col gap-2">
-                <button
-                  className="px-3 py-1.5 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600"
-                  onClick={() =>
-                    handleRecordClick({
-                      id: chapter.id,
-                      title: chapter.chapterTitle,
-                      progressPercent: chapter.progressPercent,
-                    })
-                  }
+    <div className="space-y-4 mt-4">
+      {chapters.map((chapter) => (
+        <Card key={chapter.id} className="max-w-md w-full mx-auto shadow-sm">
+          <CardHeader className="flex flex-row justify-between items-start">
+            <div>
+              <CardTitle className="text-lg">
+                <Link
+                  href={`/chapters/${chapter.id}`}
+                  className="hover:underline"
                 >
-                  記録
-                </button>
-
-                <DeleteChapterButton
-                  chapterId={chapter.id}
-                  onDeleted={() => fetchChapters()}
-                />
-              </div>
+                  {chapter.chapterTitle}
+                </Link>
+              </CardTitle>
             </div>
-          </div>
-        ))}
-      </div>
 
-      {/* 章追加 UI */}
-      <div className="mt-6">
-        {isAdding ? (
-          <div className="flex gap-2">
-            <input
-              className="border p-2 rounded w-full"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="新しい章タイトル"
+            <div className="w-12 h-12">
+              <CircularProgressbar
+                value={chapter.progressPercent ?? 0}
+                text={`${chapter.progressPercent ?? 0}%`}
+                styles={buildStyles({
+                  textSize: "28px",
+                  pathColor: "#3b82f6",
+                  textColor: "#000",
+                  trailColor: "#e5e7eb",
+                })}
+              />
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              合計学習時間: {chapter.formattedTime}
+            </p>
+          </CardContent>
+
+          <CardFooter className="flex justify-between items-center">
+            <Button
+              variant="secondary"
+              className="flex items-center gap-2"
+              onClick={() => handleRecordClick(chapter)}
+            >
+              <Pencil className="w-4 h-4" />
+              記録
+            </Button>
+
+            <DeleteChapterButton
+              chapterId={chapter.id}
+              onDeleted={fetchChapters}
             />
-            <button
-              className="px-4 py-2 bg-green-500 text-white rounded"
-              onClick={handleAdd}
-            >
-              追加
-            </button>
-            <button
-              className="px-4 py-2 bg-gray-300 rounded"
-              onClick={() => setIsAdding(false)}
-            >
-              キャンセル
-            </button>
-          </div>
-        ) : (
+          </CardFooter>
+        </Card>
+      ))}
+      {/* 章追加 UI */}
+      {isAdding ? (
+        <div className="flex gap-2 mt-4">
+          <input
+            className="border p-2 rounded w-full"
+            value={newTitle ?? ""}
+            onChange={(e) => setNewTitle(e.target.value)}
+            placeholder="新しい章タイトル"
+          />
           <button
-            onClick={() => setIsAdding(true)}
-            className="bg-blue-600 text-white rounded-xl px-5 py-3 shadow hover:bg-blue-700 transition w-full"
+            className="px-4 py-2 bg-green-500 text-white rounded"
+            onClick={handleAdd}
           >
-            ＋ 章を追加
+            追加
           </button>
-        )}
-      </div>
+          <button
+            className="px-4 py-2 bg-gray-300 rounded"
+            onClick={() => setIsAdding(false)}
+          >
+            キャンセル
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => setIsAdding(true)}
+          className="bg-blue-500 text-white rounded px-4 py-2 mt-4 flex items-center gap-1"
+        >
+          <Plus className="w-4 h-4" /> 章を追加
+        </button>
+      )}
 
       {/* 記録ダイアログ */}
       {currentChapter && (
         <StudyRecordDialog
-          chapterTitle={currentChapter.title}
-          progressPercent={progress}
+          chapterTitle={currentChapter.chapterTitle}
+          progressPercent={currentChapter.progressPercent}
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
           onSave={handleSaveRecord}
