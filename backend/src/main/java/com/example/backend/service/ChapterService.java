@@ -15,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,20 @@ public class ChapterService {
             return hours + "時間" + mins + "分";
         }
     }
+
+    public List<Chapter> createChaptersBulk(Integer bookId, List<String> titles) {
+        List<Chapter> list = new ArrayList<>();
+
+        for (String title : titles) {
+            Chapter c = new Chapter();
+            c.setBookId(bookId);
+            c.setChapterTitle(title);
+            list.add(c);
+        }
+
+        return chapterRepository.saveAll(list);
+    }
+
 
     public void deleteChapterById(Integer chapterId) {
         if (!chapterRepository.existsById(chapterId)) {

@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.BulkChapterRequest;
 import com.example.backend.dto.ChapterWithStatusDto;
 import com.example.backend.dto.ProgressUpdateRequest;
 import com.example.backend.dto.StudyLogRequest;
@@ -63,6 +64,18 @@ public class ChapterController {
 
         Chapter saved = chapterRepository.save(chapter);
         return ResponseEntity.ok(saved);
+    }
+
+    @PostMapping("/chapters/bulk")
+    public ResponseEntity<List<Chapter>> addChapters(
+            @RequestBody BulkChapterRequest request) {
+
+        List<Chapter> created = chapterService.createChaptersBulk(
+                request.getBookId(),
+                request.getTitles()
+        );
+
+        return ResponseEntity.ok(created);
     }
 
     @DeleteMapping("/chapters/{chapterId}")

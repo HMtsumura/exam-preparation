@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Trash2 } from "lucide-react";
 
 export default function ChapterCreateDialog({
   bookId,
@@ -14,20 +15,36 @@ export default function ChapterCreateDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const [title, setTitle] = useState("");
+  const [chapters, setChapters] = useState<string[]>([""]);
+
+  // 行を追加
+  const addRow = () => {
+    setChapters((prev) => [...prev, ""]);
+  };
+
+  const removeRow = (index: number) => {
+    setChapters(chapters.filter((_, i) => i !== index));
+  };
+
+  // 入力変更
+  const updateRow = (index: number, value: string) => {
+    setChapters((prev) => prev.map((c, i) => (i === index ? value : c)));
+  };
 
   const handleCreate = async () => {
     if (!bookId) return;
 
-    await fetch(`http://localhost:3000/api/books/${bookId}/chapters`, {
+    const validChapters = chapters.filter((title) => title.trim() !== "");
+    if (validChapters.length === 0) return;
+
+    await fetch("http://localhost:3000/api/chapters/bulk", {
       method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ chapterTitle: title }),
+      body: JSON.stringify({ bookId, titles: validChapters }),
+      headers: { "Content-Type": "application/json" },
     });
 
     onOpenChange(false);
+    setChapters([""]);
   };
 
   return (
@@ -37,9 +54,31 @@ export default function ChapterCreateDialog({
           <DialogTitle>章を追加</DialogTitle>
         </DialogHeader>
 
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+           {chapters.map((title, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <Input
+                value={title}
+                onChange={(e) => updateRow(idx, e.target.value)}
+                placeholder={`章タイトル ${idx + 1}`}
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => removeRow(idx)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          ))}
 
-        <Button onClick={handleCreate}>追加</Button>
+          <Button variant="outline" onClick={addRow}>
+            + 行を追加
+          </Button>
+
+          <Button className="w-full" onClick={handleCreate}>
+            登録する
+          </Button>
       </DialogContent>
     </Dialog>
   );
