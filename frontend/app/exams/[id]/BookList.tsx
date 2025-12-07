@@ -74,8 +74,8 @@ export default function BookList({
             <CardHeader className="p-0">
               <div className="relative w-full h-48 bg-gray-200">
                 <Image
-                  src={book.imageUrl || "/placeholder-book.png"}
-                  alt={book.bookName}
+                  src={book.imageUrl || "/book-default.png"}
+                  alt={book.bookName ?? "参考書の表紙"}
                   fill
                   className="object-cover"
                 />

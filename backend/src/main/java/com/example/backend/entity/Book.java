@@ -15,6 +15,9 @@ public class Book {
     @Column(name = "book_name")
     private String bookName;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "exam_id")
     private Integer examId;
 }
