@@ -16,7 +16,8 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
   const [open, setOpen] = useState(false);
   const [bookName, setbookName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  
   async function handleCreate() {
     const res = await fetch("http://localhost:3000/api/books", {
       method: "POST",
@@ -52,7 +53,7 @@ export default function BookCreateDialog({ examId, onCreated }: { examId: number
           <div className="flex justify-center">
             <ImagePicker
               imageUrl={imageUrl}
-              onChange={setImageUrl}
+              onChange={setImageFile}
             />
           </div>
           <Input

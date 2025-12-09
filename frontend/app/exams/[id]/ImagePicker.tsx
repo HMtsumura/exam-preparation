@@ -2,21 +2,19 @@
 
 import { useState } from "react";
 
-export default function ImagePicker({
-  imageUrl,
-  onChange,
-}: {
-  imageUrl: string;
-  onChange: (value: string) => void;
-}) {
+interface ImagePickerProps {
+  onChange: (file: File | null) => void;
+  imageUrl?: string | null; // 既存画像の URL（編集時にも使える）
+}
+
+
+
+export default function ImagePicker({ onChange, imageUrl }: ImagePickerProps) {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    onChange(file);
     const reader = new FileReader();
-    reader.onload = () => {
-      onChange(reader.result as string);
-    };
     reader.readAsDataURL(file);
   };
 
@@ -39,7 +37,7 @@ export default function ImagePicker({
 
         {imageUrl && (
           <button
-            onClick={() => onChange("")}
+            onClick={() => onChange(null)}
             className="absolute -right-2 -bottom-2 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center shadow"
           >
             ×
