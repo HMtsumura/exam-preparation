@@ -65,59 +65,67 @@ export default function BookList({
   return (
     <ul>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {books.map((book) => (
-          <Card
-            key={book.id}
-            className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-          >
-            {/* 画像 */}
-            <CardHeader className="p-0">
-              <div className="relative w-full h-48 bg-gray-200">
-                <Image
-                  src={book.imageUrl || "/book-default.png"}
-                  alt={book.bookName ?? "参考書の表紙"}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </CardHeader>
+{books.map((book) => {
+          // 🔵 画像 URL を組み立てる（本番/開発で自動切り替え）
+          const imageSrc = book.imageUrl
+            ? `http://localhost:8080${book.imageUrl}`
+            : `http://localhost:3000/book-default.png`;
+          console.log(imageSrc)
+          return (
+            <Card
+              key={book.id}
+              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+            >
+              {/* 画像 */}
+              <CardHeader className="p-0">
+                <div className="relative w-full h-48 bg-gray-200">
+                  <Image
+                    src={imageSrc}
+                    alt={book.bookName ?? "参考書の表紙"}
+                    fill
+                    unoptimized={true} 
+                    className="object-cover"
+                  />
+                </div>
+              </CardHeader>
 
-            {/* タイトル + 情報 */}
-            <CardContent className="p-4">
-              <h3 className="font-semibold text-lg line-clamp-2">
-                {book.bookName}
-              </h3>
+              {/* タイトル + 情報 */}
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-lg line-clamp-2">
+                  {book.bookName}
+                </h3>
 
-              {/* 進捗 */}
-              <div className="mt-3">
-                <div className="flex justify-between text-sm">
-                  <span>進捗</span>
-                  <span>{book.progressPercent ?? 0}%</span>
+                {/* 進捗 */}
+                <div className="mt-3">
+                  <div className="flex justify-between text-sm">
+                    <span>進捗</span>
+                    <span>{book.progressPercent ?? 0}%</span>
+                  </div>
+
+                  <Progress
+                    value={book.progressPercent ?? 0}
+                    className="h-2 mt-1"
+                  />
                 </div>
 
-                <Progress
-                  value={book.progressPercent ?? 0}
-                  className="h-2 mt-1"
-                />
-              </div>
+                {/* 学習時間 */}
+                <p className="text-sm text-gray-600 mt-3">
+                  ⏱ 合計学習時間: {formatMinutes(book.totalStudyMinutes ?? 0)}
+                </p>
+              </CardContent>
 
-              {/* 学習時間 */}
-              <p className="text-sm text-gray-600 mt-3">
-                ⏱ 合計学習時間: {formatMinutes(book.totalStudyMinutes ?? 0)}
-              </p>
-            </CardContent>
-
-            {/* 詳細へ */}
-            <CardFooter className="p-4 pt-0">
-              <Link
-                href={`/books/${book.id}`}
-                className="text-blue-600 text-sm hover:underline"
-              >
-                詳細を見る →
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
+              {/* 詳細へ */}
+              <CardFooter className="p-4 pt-0">
+                <Link
+                  href={`/books/${book.id}`}
+                  className="text-blue-600 text-sm hover:underline"
+                >
+                  詳細を見る →
+                </Link>
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
       <BookCreateDialog
         examId={examId}
