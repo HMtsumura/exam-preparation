@@ -1,9 +1,11 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.BookResponse;
 import com.example.backend.entity.Book;
 import com.example.backend.entity.Exam;
 import com.example.backend.repository.BookRepository;
 import com.example.backend.repository.ExamRepository;
+import com.example.backend.service.BookService;
 import com.example.backend.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,17 @@ import java.util.Optional;
 public class ExamController {
     private final ExamService examService;
 
+    private final BookService bookService;
+
     @Autowired
     private ExamRepository examRepository;
 
     @Autowired
     private BookRepository bookRepository;
 
-    public ExamController(ExamService examService) {
+    public ExamController(ExamService examService, BookService bookService) {
         this.examService = examService;
+        this.bookService = bookService;
     }
 
     // 全試験取得
@@ -48,7 +53,7 @@ public class ExamController {
     }
 
     @GetMapping("/{examId}/books")
-    public List<Book> getBooksByExamId(@PathVariable Integer examId) {
-        return bookRepository.findByExamId(examId);
+    public List<BookResponse> getBooksByExamId(@PathVariable Integer examId) {
+        return bookService.getBooksByExamId(examId);
     }
 }

@@ -12,6 +12,9 @@ type Exam = {
 type Book = {
   id: number;
   bookName: string;
+  imageUrl?: string;
+  progressPercent?: number;
+  totalStudyMinutes?: number;
 };
 
 interface Props {
@@ -26,7 +29,7 @@ export default async function ExamDetailPage({ params }: Props) {
 
   const booksRes = await fetch(`http://localhost:3000/api/exams/${id}/books`);
   const books: Book[] = await booksRes.json();
-
+  console.log(books)
   return (
     <div>
       <h1>試験詳細</h1>

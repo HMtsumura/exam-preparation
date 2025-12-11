@@ -70,7 +70,6 @@ export default function BookList({
           const imageSrc = book.imageUrl
             ? `http://localhost:8080${book.imageUrl}`
             : `http://localhost:3000/book-default.png`;
-          console.log(imageSrc)
           return (
             <Card
               key={book.id}
