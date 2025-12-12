@@ -3,6 +3,16 @@ VALUES
 ('alice', 'alice@example.com', 'password', TRUE, NOW(), NOW()),
 ('bob', 'bob@example.com', 'password', TRUE, NOW(), NOW());
 
+INSERT INTO exams (user_id, exam_name, exam_date, status)
+VALUES
+  (1, '基本情報技術者試験', '2025-04-21', 'scheduled'),
+  (1, 'AWS 認定クラウドプラクティショナー', '2025-03-15', 'scheduled'),
+  (2, '簿記 2 級', '2025-02-20', 'passed'),
+  (2, 'IT パスポート試験', '2025-05-10', 'scheduled'),
+  (3, 'TOEIC L&R', '2025-03-01', 'failed'),
+  (3, '応用情報技術者試験', '2025-04-21', 'scheduled');
+
+
 INSERT INTO books (id, book_name, exam_id) VALUES
 (1, '基本情報技術者試験 テキスト', 1),
 (2, '応用情報技術者試験 問題集', 1),

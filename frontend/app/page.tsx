@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ExamRegisterDialogWrapper from './ExamRegisterDialogWrapper';
 
 type Exam = {
   id: number;
@@ -21,6 +22,7 @@ export default function MainPage() {
           </li>
         ))}
       </ul>
+      <ExamRegisterDialogWrapper />
     </div>
   );
 }
