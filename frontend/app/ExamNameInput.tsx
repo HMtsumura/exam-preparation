@@ -1,9 +1,21 @@
 "use client";
 
 import * as React from "react";
-import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function ExamNameInput({
   value,
@@ -31,32 +43,38 @@ export function ExamNameInput({
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Input
-          value={inputValue}
-          placeholder="資格名を入力..."
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            setOpen(true);
-            onChange(e.target.value);
-          }}
-        />
-      </PopoverTrigger>
+    <div className="w-full">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+            <Command shouldFilter={false}>   
+                <CommandInput 
+                    value={inputValue} 
+                    onValueChange={
+                        (v) => {
+                            setInputValue(v);
+                            onChange(v);
+                            setOpen(true);
+                        }} placeholder="資格名" />
+            </Command>
+        </PopoverTrigger>
 
-      {open && (
-        <PopoverContent className="p-0 w-[300px]">
-          <Command>
+        <PopoverContent 
+            className="p-0 w-[300px]"
+            onOpenAutoFocus={(e) => e.preventDefault()}>
+          <Command shouldFilter={false}>
             <CommandList>
               <CommandGroup>
                 {filtered.map((exam) => (
                   <CommandItem
                     key={exam}
+                    // 入力された文字で Command 側のフィルタが暴走しないように
+                    value={exam}
                     onSelect={() => {
                       setInputValue(exam);
                       onChange(exam);
                       setOpen(false);
                     }}
+                    className="cursor-pointer"
                   >
                     {exam}
                   </CommandItem>
@@ -71,7 +89,7 @@ export function ExamNameInput({
             </CommandList>
           </Command>
         </PopoverContent>
-      )}
-    </Popover>
+      </Popover>
+    </div>
   );
 }
