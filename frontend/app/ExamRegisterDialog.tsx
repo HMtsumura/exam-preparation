@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ExamNameInput } from "./ExamNameInput";
+import { ExamDatePicker } from "./ExamDatePicker";
 
 type ExamRegisterDialogProps = {
   open: boolean;
@@ -17,7 +18,7 @@ type ExamRegisterDialogProps = {
   onSubmit: (data: {
     examName: string;
     dailyHours: number;
-    targetDate: string; // ← page.tsx に合わせる
+    examDate: Date | undefined; // ← page.tsx に合わせる
   }) => void | Promise<void>;
 };
 
@@ -30,7 +31,7 @@ export default function ExamRegisterDialog({
 
   const [examName, setExamName] = useState("");
   const [dailyHours, setDailyHours] = useState("");
-  const [targetDate, setTargetDate] = useState("");
+  const [examDate, setExamDate] = useState<Date | undefined>();
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => s - 1);
@@ -39,7 +40,7 @@ export default function ExamRegisterDialog({
     await onSubmit({
       examName,
       dailyHours: Number(dailyHours),
-      targetDate,
+      examDate,
     });
     onOpenChange(false);
     setStep(1);
@@ -73,11 +74,10 @@ export default function ExamRegisterDialog({
 
         {/* STEP 3 */}
         {step === 3 && (
-          <Input
-            type="date"
-            value={targetDate}
-            onChange={(e) => setTargetDate(e.target.value)}
-          />
+          <ExamDatePicker
+            value={examDate}
+            onChange={setExamDate}
+         />
         )}
 
         <DialogFooter>
@@ -92,7 +92,7 @@ export default function ExamRegisterDialog({
             </Button>
           )}
           {step === 3 && (
-            <Button onClick={handleSubmit} disabled={!targetDate}>
+            <Button onClick={handleSubmit} disabled={!examDate}>
               登録
             </Button>
           )}

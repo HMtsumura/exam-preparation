@@ -10,7 +10,7 @@ export default function ExamRegisterDialogWrapper() {
   const handleSubmit = async (data: {
     examName: string;
     dailyHours: number;
-    targetDate: string;
+    examDate: Date | undefined;
   }) => {
     await fetch("/api/exams", {
       method: "POST",
