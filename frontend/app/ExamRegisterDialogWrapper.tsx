@@ -71,31 +71,63 @@ export default function ExamRegisterDialogWrapper({
     return Math.ceil(diffDays);
   }
 
+  function getExamStatus(date: Date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+
+    if (d.getTime() === today.getTime()) return "today";
+    if (d.getTime() < today.getTime()) return "past";
+    return "future";
+  }
+
   return (
     <>
       <Button onClick={() => setOpen(true)}>＋ 試験を登録</Button>
       <h1>試験一覧</h1>
-      <ul className="space-y-3">
+      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {exams.map((exam) => {
           const examDate = new Date(exam.examDate);
           const daysLeft = daysUntilIfFuture(examDate.toLocaleDateString("ja-JP"));
+          const status = getExamStatus(examDate);
 
           return (
-            <li key={exam.id} className="rounded border p-4 hover:bg-gray-50">
+            <li
+              key={exam.id}
+              className={`rounded-lg border p-4 transition hover:shadow
+          ${status === "past" ? "bg-gray-50 text-gray-400" : "bg-white"}
+        `}
+            >
               <Link href={`/exams/${exam.id}`}>
-                <div className="font-semibold">{exam.examName}</div>
+                <h3 className="font-semibold text-lg">{exam.examName}</h3>
               </Link>
 
-              <div className="text-sm text-gray-500">
-                受験日：
-                {examDate.toLocaleDateString("ja-JP")}
+              <div className="mt-1 text-sm">
+                📅 {examDate.toLocaleDateString("ja-JP")}
               </div>
 
-              {daysLeft !== null && (
-                <span className="inline-block rounded bg-blue-50 px-2 py-0.5 text-xs text-blue-700">
-                  あと {daysLeft} 日
-                </span>
-              )}
+              {/* ステータス表示 */}
+              <div className="mt-3">
+                {status === "future" && daysLeft !== null && (
+                  <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700">
+                    あと {daysLeft} 日
+                  </span>
+                )}
+
+                {status === "today" && (
+                  <span className="inline-block rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
+                    🎯 本日試験
+                  </span>
+                )}
+
+                {status === "past" && (
+                  <span className="inline-block rounded-full bg-gray-200 px-3 py-1 text-sm">
+                    試験終了
+                  </span>
+                )}
+              </div>
             </li>
           );
         })}
