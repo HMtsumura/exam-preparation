@@ -17,7 +17,7 @@ type ExamRegisterDialogProps = {
   onOpenChange: (v: boolean) => void;
   onSubmit: (data: {
     examName: string;
-    dailyHours: number;
+    // dailyHours: number;
     examDate: Date | undefined; // ← page.tsx に合わせる
   }) => void | Promise<void>;
 };
@@ -39,7 +39,7 @@ export default function ExamRegisterDialog({
   const handleSubmit = async () => {
     await onSubmit({
       examName,
-      dailyHours: Number(dailyHours),
+      // dailyHours: Number(dailyHours), TODO: 必要な勉強時間に変更する
       examDate,
     });
     onOpenChange(false);

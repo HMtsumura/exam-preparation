@@ -9,12 +9,21 @@ export default function ExamRegisterDialogWrapper() {
 
   const handleSubmit = async (data: {
     examName: string;
-    dailyHours: number;
+    // dailyHours: number;
     examDate: Date | undefined;
   }) => {
+    if (!data.examDate) {
+        alert("受験日を選択してください");
+        return;
+    }
+    const examDate = data.examDate.toISOString();
+    const examName = data.examName;
     await fetch("/api/exams", {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        examName,
+        examDate,
+        }),
     });
 
     alert("試験を登録しました");

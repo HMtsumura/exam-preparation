@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+　const { examName, examDate } = await req.json();
   try {
-    const res = await fetch(`http://backend:8080/api/books`, {
+    const res = await fetch(`http://backend:8080/api/exams`, {
       method: "POST",
-      body: await req.formData()
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+            examName,
+            examDate,
+        }),
     });
 
     if (!res.ok) {

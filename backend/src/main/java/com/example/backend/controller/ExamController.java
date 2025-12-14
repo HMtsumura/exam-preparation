@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.BookResponse;
+import com.example.backend.dto.ExamCreateRequest;
 import com.example.backend.entity.Book;
 import com.example.backend.entity.Exam;
 import com.example.backend.repository.BookRepository;
@@ -9,13 +10,18 @@ import com.example.backend.service.BookService;
 import com.example.backend.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/exams")
@@ -56,4 +62,18 @@ public class ExamController {
     public List<BookResponse> getBooksByExamId(@PathVariable Integer examId) {
         return bookService.getBooksByExamId(examId);
     }
+
+    @PostMapping
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Exam> addExam(
+            @RequestBody ExamCreateRequest request
+    ) throws IOException {
+        Exam exam = new Exam();
+        exam.setExamName(request.getExamName());
+        exam.setExamDate(request.getExamDate());
+        exam.setUserId(1);
+        examRepository.save(exam);
+
+        return ResponseEntity.ok(exam);
+    };
 }
