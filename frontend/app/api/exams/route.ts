@@ -23,3 +23,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "参考書の追加に失敗しました" }, { status: 500 });
   }
 }
+
+export async function GET(
+  req: Request,
+) {
+    const res = await fetch(`http://backend:8080/api/exams`);
+    const data = await res.json();
+    return NextResponse.json(data);
+}

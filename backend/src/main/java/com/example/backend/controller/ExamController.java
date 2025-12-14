@@ -44,6 +44,7 @@ public class ExamController {
     // 全試験取得
     @GetMapping
     public List<Exam> getAllExams() {
+        System.out.println("receivved");
         return examService.getAllExams();
     }
 
