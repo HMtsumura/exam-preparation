@@ -33,4 +33,22 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     );
 
     List<Chapter> findByBookId(Integer bookId);
+
+    @Query("""
+        SELECT new com.example.backend.dto.ChapterWithStatusDto(
+        c.id,
+        c.chapterTitle,
+        cs.progressPercent,
+        COALESCE(SUM(sl.durationMinutes), 0)
+    )
+        FROM Chapter c
+        JOIN c.book b
+        LEFT JOIN ChapterStatus cs ON cs.chapter.id = c.id
+        LEFT JOIN StudyLog sl ON sl.chapter.id = c.id
+        WHERE b.exam.id = :examId
+        GROUP BY c.id, c.chapterTitle, cs.progressPercent
+    """)
+    List<ChapterWithStatusDto> findChaptersWithStatusByExamId(
+            @Param("examId") Integer examId
+    );
 }

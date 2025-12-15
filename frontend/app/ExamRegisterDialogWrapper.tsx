@@ -4,11 +4,13 @@ import { useState } from "react";
 import ExamRegisterDialog from "./ExamRegisterDialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Progress } from "@/components/ui/progress";
 
 type Exam = {
   id: number;
   examName: string;
   examDate: Date;
+  progressPercent: number;
 };
 
 export default function ExamRegisterDialogWrapper({
@@ -90,7 +92,9 @@ export default function ExamRegisterDialogWrapper({
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {exams.map((exam) => {
           const examDate = new Date(exam.examDate);
-          const daysLeft = daysUntilIfFuture(examDate.toLocaleDateString("ja-JP"));
+          const daysLeft = daysUntilIfFuture(
+            examDate.toLocaleDateString("ja-JP")
+          );
           const status = getExamStatus(examDate);
 
           return (
@@ -127,6 +131,23 @@ export default function ExamRegisterDialogWrapper({
                     試験終了
                   </span>
                 )}
+              </div>
+              <div className="mt-3">
+                <div className="flex justify-between text-sm mb-1">
+                  <span>進捗</span>
+                  <span>{Math.round(exam.progressPercent)}%</span>
+                </div>
+
+                <Progress
+                  value={exam.progressPercent}
+                  className={`h-2 ${
+                    exam.progressPercent >= 80
+                      ? "bg-green-500"
+                      : exam.progressPercent >= 50
+                      ? "bg-blue-500"
+                      : "bg-gray-300"
+                  }`}
+                />
               </div>
             </li>
           );

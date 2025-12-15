@@ -20,4 +20,8 @@ public class Book {
 
     @Column(name = "exam_id")
     private Integer examId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exam_id", insertable = false, updatable = false)
+    private Exam exam;
 }

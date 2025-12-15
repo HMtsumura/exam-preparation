@@ -5,6 +5,7 @@ type Exam = {
   id: number;
   examName: string;
   examDate: Date;
+  progressPercent: number;
 };
 
 // const dummyExams: Exam[] = [
@@ -13,7 +14,6 @@ type Exam = {
 // ];
 
 const examRes = await fetch(`http://localhost:3000/api/exams`);
-console.log(examRes);
 const exams: Exam[] = await examRes.json();
 
 export default function MainPage() {

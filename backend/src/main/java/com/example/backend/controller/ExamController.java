@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.BookResponse;
 import com.example.backend.dto.ExamCreateRequest;
+import com.example.backend.dto.ExamResponse;
 import com.example.backend.entity.Book;
 import com.example.backend.entity.Exam;
 import com.example.backend.repository.BookRepository;
@@ -41,10 +42,10 @@ public class ExamController {
         this.bookService = bookService;
     }
 
-    // 全試験取得
+    // 全試験取得 TODO: user毎に取得できるように
     @GetMapping
-    public List<Exam> getAllExams() {
-        System.out.println("receivved");
+    public List<ExamResponse> getAllExams() {
+        System.out.print("here");
         return examService.getAllExams();
     }
 
