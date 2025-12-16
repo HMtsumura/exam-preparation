@@ -14,8 +14,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { EXAM_MASTERS } from "@/data/exams";
 
 export function ExamNameInput({
   value,
@@ -27,56 +26,57 @@ export function ExamNameInput({
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState(value);
 
-  const examOptions = [
-    "基本情報技術者試験",
-    "応用情報技術者試験",
-    "ITパスポート",
-    "簿記3級",
-    "簿記2級",
-    "公認会計士試験",
-    "TOEIC L&R",
-    "AWS Cloud Practitioner",
-  ];
+  const filtered = React.useMemo(() => {
+    if (!inputValue) return EXAM_MASTERS;
 
-  const filtered = examOptions.filter((exam) =>
-    exam.toLowerCase().includes(inputValue.toLowerCase())
-  );
+    const keyword = inputValue.toLowerCase();
+
+    return EXAM_MASTERS.filter((exam) => {
+      if (exam.name.toLowerCase().includes(keyword)) return true;
+      if (exam.aliases?.some((a) => a.toLowerCase().includes(keyword))) {
+        return true;
+      }
+      return false;
+    });
+  }, [inputValue]);
 
   return (
     <div className="w-full">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-            <Command shouldFilter={false}>   
-                <CommandInput 
-                    value={inputValue} 
-                    onValueChange={
-                        (v) => {
-                            setInputValue(v);
-                            onChange(v);
-                            setOpen(true);
-                        }} placeholder="資格名" />
-            </Command>
+          <Command shouldFilter={false}>
+            <CommandInput
+              value={inputValue}
+              onValueChange={(v) => {
+                setInputValue(v);
+                onChange(v);
+                setOpen(true);
+              }}
+              placeholder="資格名"
+            />
+          </Command>
         </PopoverTrigger>
 
-        <PopoverContent 
-            className="p-0 w-[300px]"
-            onOpenAutoFocus={(e) => e.preventDefault()}>
+        <PopoverContent
+          className="p-0 w-[300px]"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <Command shouldFilter={false}>
             <CommandList>
               <CommandGroup>
                 {filtered.map((exam) => (
                   <CommandItem
-                    key={exam}
+                    key={exam.name}
                     // 入力された文字で Command 側のフィルタが暴走しないように
-                    value={exam}
+                    value={exam.name}
                     onSelect={() => {
-                      setInputValue(exam);
-                      onChange(exam);
+                      setInputValue(exam.name);
+                      onChange(exam.name);
                       setOpen(false);
                     }}
                     className="cursor-pointer"
                   >
-                    {exam}
+                    {exam.name}
                   </CommandItem>
                 ))}
 

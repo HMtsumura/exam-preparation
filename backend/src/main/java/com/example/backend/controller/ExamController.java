@@ -45,7 +45,6 @@ public class ExamController {
     // 全試験取得 TODO: user毎に取得できるように
     @GetMapping
     public List<ExamResponse> getAllExams() {
-        System.out.print("here");
         return examService.getAllExams();
     }
 
