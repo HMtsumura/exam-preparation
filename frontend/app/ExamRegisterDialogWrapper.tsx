@@ -5,6 +5,7 @@ import ExamRegisterDialog from "./ExamRegisterDialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
+import { PassedStamp } from "./PassedStamp";
 
 type Exam = {
   id: number;
@@ -100,10 +101,12 @@ export default function ExamRegisterDialogWrapper({
           return (
             <li
               key={exam.id}
-              className={`rounded-lg border p-4 transition hover:shadow
+              className={`relative rounded-lg border p-4 transition hover:shadow
           ${status === "past" ? "bg-gray-50 text-gray-400" : "bg-white"}
         `}
             >
+              {status === "past" && <PassedStamp />}
+
               <Link href={`/exams/${exam.id}`}>
                 <h3 className="font-semibold text-lg">{exam.examName}</h3>
               </Link>
