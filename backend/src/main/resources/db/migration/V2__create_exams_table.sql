@@ -1,0 +1,12 @@
+CREATE TABLE exams (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  exam_name VARCHAR(255) NOT NULL,
+  exam_date DATE NOT NULL,
+  status ENUM('scheduled', 'passed', 'failed') NOT NULL DEFAULT 'scheduled',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  CONSTRAINT fk_user_exam
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
