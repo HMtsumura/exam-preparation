@@ -104,10 +104,10 @@ export default function ExamRegisterDialogWrapper({
             <li
               key={exam.id}
               className={`relative rounded-lg border p-4 transition hover:shadow
-          ${status === "past" ? "bg-gray-50 text-gray-400" : "bg-white"}
+          ${exam.status === "passed" ? "bg-gray-50 text-gray-400" : "bg-white"}
         `}
             >
-              {status === "past" && <PassedStamp />}
+              {exam.status === "passed" && <PassedStamp />}
 
               <Link href={`/exams/${exam.id}`}>
                 <h3 className="font-semibold text-lg">{exam.examName}</h3>
