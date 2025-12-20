@@ -6,6 +6,8 @@ type Exam = {
   examName: string;
   examDate: Date;
   progressPercent: number;
+  estimatedStudyHours: number;
+  status: string;
 };
 
 // const dummyExams: Exam[] = [

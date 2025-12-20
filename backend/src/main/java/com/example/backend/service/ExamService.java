@@ -37,7 +37,9 @@ public class ExamService {
                         exam.getId(),
                         exam.getExamName(),
                         exam.getExamDate(),
-                        calculateExamProgress(exam.getId())
+                        calculateExamProgress(exam.getId()),
+                        exam.getEstimatedStudyHours(),
+                        exam.getStatus()
                 ))
                 .toList();
 

@@ -28,6 +28,9 @@ public class Exam {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "estimated_study_hours")
+    private Integer estimatedStudyHours;
+
     @Column(name = "created_at")
     private Date createdAt;
 

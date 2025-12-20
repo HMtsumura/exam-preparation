@@ -13,4 +13,6 @@ public class ExamResponse {
     private String examName;
     private Date examDate;
     private Double progressPercent;
+    private Integer estimatedStudyHours;
+    private String status;
 }

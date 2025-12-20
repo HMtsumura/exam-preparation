@@ -12,6 +12,8 @@ type Exam = {
   examName: string;
   examDate: Date;
   progressPercent: number;
+  estimatedStudyHours: number;
+  status: string;
 };
 
 export default function ExamRegisterDialogWrapper({

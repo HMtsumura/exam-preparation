@@ -1,3 +1,4 @@
+import { Numerals } from "react-day-picker";
 import BookList from "./BookList";
 
 // app/exams/[id]/page.tsx
@@ -7,6 +8,7 @@ type Exam = {
   examName: string;
   examDate: string;
   status: string;
+  estimatedStudyHours: number;
 };
 
 type Book = {
@@ -36,7 +38,7 @@ export default async function ExamDetailPage({ params }: Props) {
       <p>ID: {exam.id}</p>
       <p>試験名: {exam.examName}</p>
       <p>試験日: {exam.examDate}</p>
-
+      <p>必要な勉強時間: {exam.estimatedStudyHours}</p>
       <h2>この試験で使う本</h2>
       <BookList initialBooks={books} examId={exam.id}/>      
     </div>
