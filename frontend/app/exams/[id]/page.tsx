@@ -40,7 +40,7 @@ export default async function ExamDetailPage({ params }: Props) {
       <p>試験日: {exam.examDate}</p>
       <ExamPaceStatus
         examDate={new Date(exam.examDate)}
-        totalStudyMinutes={exam.estimatedStudyHours}
+        totalStudyMinutes={exam.estimatedStudyHours-30}
         estimatedStudyHours={exam.estimatedStudyHours}
       />
 
