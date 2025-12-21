@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import { PassedStamp } from "./PassedStamp";
+import { FailedStamp } from "./FailedStamp";
 
 type Exam = {
   id: number;
@@ -108,6 +109,7 @@ export default function ExamRegisterDialogWrapper({
         `}
             >
               {exam.status === "passed" && <PassedStamp />}
+              {exam.status === "failed" && <FailedStamp />}
 
               <Link href={`/exams/${exam.id}`}>
                 <h3 className="font-semibold text-lg">{exam.examName}</h3>
