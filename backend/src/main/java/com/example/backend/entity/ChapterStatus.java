@@ -2,6 +2,8 @@ package com.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -26,9 +28,11 @@ public class ChapterStatus {
     @Column(name = "last_studied")
     private Date lastStudied;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private Date createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
 
