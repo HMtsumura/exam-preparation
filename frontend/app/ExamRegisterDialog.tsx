@@ -17,7 +17,7 @@ type ExamRegisterDialogProps = {
   onOpenChange: (v: boolean) => void;
   onSubmit: (data: {
     examName: string;
-    // dailyHours: number;
+    estimatedDailyStudyHours: number;
     examDate: Date | undefined; // ← page.tsx に合わせる
   }) => void | Promise<void>;
 };
@@ -30,16 +30,16 @@ export default function ExamRegisterDialog({
   const [step, setStep] = useState(1);
 
   const [examName, setExamName] = useState("");
-  const [dailyHours, setDailyHours] = useState("");
+  const [estimatedDailyStudyHours, setEstimatedDailyStudyHours] = useState("");
   const [examDate, setExamDate] = useState<Date | undefined>();
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => s - 1);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async () =>{
     await onSubmit({
       examName,
-      // dailyHours: Number(dailyHours), TODO: 必要な勉強時間に変更する
+      estimatedDailyStudyHours: Number(estimatedDailyStudyHours),
       examDate,
     });
     onOpenChange(false);
@@ -67,8 +67,8 @@ export default function ExamRegisterDialog({
           <Input
             type="number"
             placeholder="学習時間（時間）"
-            value={dailyHours}
-            onChange={(e) => setDailyHours(e.target.value)}
+            value={estimatedDailyStudyHours}
+            onChange={(e) => setEstimatedDailyStudyHours(e.target.value)}
           />
         )}
 

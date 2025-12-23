@@ -33,6 +33,9 @@ public class Exam {
     @Column(name = "estimated_study_hours")
     private Integer estimatedStudyHours;
 
+    @Column(name = "estimated_daily_study_hours")
+    private Integer estimatedDailyStudyHours;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Date createdAt;

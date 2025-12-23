@@ -12,5 +12,7 @@ public class ExamCreateRequest {
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     private Date examDate;
+
+    private Integer estimatedDailyStudyHours;
     // getters and setters
 }

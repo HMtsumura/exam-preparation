@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-　const { examName, examDate } = await req.json();
+　const { examName, examDate, estimatedDailyStudyHours } = await req.json();
   try {
     const res = await fetch(`http://backend:8080/api/exams`, {
       method: "POST",
@@ -9,6 +9,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({ 
             examName,
             examDate,
+            estimatedDailyStudyHours,
         }),
     });
 

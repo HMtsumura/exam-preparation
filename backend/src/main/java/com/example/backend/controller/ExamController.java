@@ -73,6 +73,10 @@ public class ExamController {
         Exam exam = new Exam();
         exam.setExamName(request.getExamName());
         exam.setExamDate(request.getExamDate());
+        exam.setEstimatedDailyStudyHours(request.getEstimatedDailyStudyHours());
+        // TODO: openAiのapiで取得した値にする
+        exam.setEstimatedStudyHours(100);
+        // TODO: ユーザー機能追加したら正しい値に変更
         exam.setUserId(1);
         examRepository.save(exam);
 

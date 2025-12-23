@@ -26,7 +26,7 @@ export default function ExamRegisterDialogWrapper({
   const [exams, setExams] = useState(initialExams);
   const handleSubmit = async (data: {
     examName: string;
-    // dailyHours: number;
+    estimatedDailyStudyHours: number;
     examDate: Date | undefined;
   }) => {
     if (!data.examDate) {
@@ -35,11 +35,13 @@ export default function ExamRegisterDialogWrapper({
     }
     const examDate = data.examDate.toISOString();
     const examName = data.examName;
+    const estimatedDailyStudyHours = data.estimatedDailyStudyHours;
     const res = await fetch("/api/exams", {
       method: "POST",
       body: JSON.stringify({
         examName,
         examDate,
+        estimatedDailyStudyHours,
       }),
     });
 
