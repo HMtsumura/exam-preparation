@@ -9,7 +9,9 @@ type Exam = {
   examName: string;
   examDate: string;
   status: string;
+  totalStudyMinutes: number;
   estimatedStudyHours: number;
+  estimatedDailyStudyHours: number;
 };
 
 type Book = {
@@ -31,7 +33,6 @@ export default async function ExamDetailPage({ params }: Props) {
 
   const booksRes = await fetch(`http://localhost:3000/api/exams/${id}/books`);
   const books: Book[] = await booksRes.json();
-  console.log(books);
   return (
     <div>
       <h1>試験詳細</h1>
@@ -40,7 +41,8 @@ export default async function ExamDetailPage({ params }: Props) {
       <p>試験日: {exam.examDate}</p>
       <ExamPaceStatus
         examDate={new Date(exam.examDate)}
-        totalStudyMinutes={exam.estimatedStudyHours-30}
+        totalStudyMinutes={exam.totalStudyMinutes}
+        estimatedDailyStudyHours={exam.estimatedDailyStudyHours}
         estimatedStudyHours={exam.estimatedStudyHours}
       />
 

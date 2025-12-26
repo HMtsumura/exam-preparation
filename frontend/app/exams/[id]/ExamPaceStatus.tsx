@@ -1,15 +1,18 @@
 export default function ExamPaceStatus({
   examDate,
   totalStudyMinutes,
+  estimatedDailyStudyHours,
   estimatedStudyHours,
 }: {
   examDate: Date;
   totalStudyMinutes: number;
+  estimatedDailyStudyHours: number;
   estimatedStudyHours: number;
 }) {
   const { status, message } = evaluatePace({
     examDate,
     totalStudyMinutes,
+    estimatedDailyStudyHours,
     estimatedStudyHours,
   });
 
@@ -18,6 +21,7 @@ export default function ExamPaceStatus({
   function evaluatePace({
     examDate,
     totalStudyMinutes,
+    estimatedDailyStudyHours,
     dailyAvailableMinutes,
     // TODO: create TYPE
   }: any): {
