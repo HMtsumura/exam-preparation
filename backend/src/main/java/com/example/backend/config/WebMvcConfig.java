@@ -1,6 +1,9 @@
 package com.example.backend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -12,6 +15,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry
                 .addResourceHandler("/uploads/**")           // ブラウザから呼ぶパス
                 .addResourceLocations("file:uploads/");      // サーバー上の保存先
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }
 

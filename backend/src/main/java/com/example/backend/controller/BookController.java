@@ -4,6 +4,7 @@ import com.example.backend.entity.Book;
 import com.example.backend.entity.Chapter;
 import com.example.backend.repository.BookRepository;
 import com.example.backend.service.BookService;
+import com.example.backend.service.TocExtractorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,14 @@ import java.util.UUID;
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
+    private final TocExtractorService tocExtractorService;
 
     @Autowired
     private BookRepository bookRepository;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, TocExtractorService tocExtractorService) {
         this.bookService = bookService;
+        this.tocExtractorService = tocExtractorService;
     }
 
     @PostMapping
@@ -65,5 +68,18 @@ public class BookController {
 
         // 参考書が存在しない場合は 404
         return bookOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // 目次抽出エンドポイント
+    @PostMapping("/extract-toc")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<?> extractTableOfContents(
+            @RequestParam MultipartFile file
+    ) {
+        try {
+            return ResponseEntity.ok(tocExtractorService.extractToc(file));
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Error processing file: " + e.getMessage());
+        }
     }
 }
