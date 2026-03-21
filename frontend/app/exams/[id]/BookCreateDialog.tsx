@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ImagePicker from "./ImagePicker";
+import TocExtractDialog from "./TocExtractDialog";
 
 type Book = {
   id: number;
@@ -28,6 +29,8 @@ export default function BookCreateDialog({
   const [bookName, setbookName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [createdBook, setCreatedBook] = useState<Book | null>(null);
+  const [showTocDialog, setShowTocDialog] = useState(false);
 
   async function handleCreate() {
     const formData = new FormData();
@@ -51,9 +54,21 @@ export default function BookCreateDialog({
 
     const book = await res.json();
 
+    setCreatedBook(book);
     setOpen(false); // このダイアログを閉じる
-    onCreated(book); // 作成された bookId を親へ通知
+    setShowTocDialog(true); // 目次抽出ダイアログを開く
   }
+
+  const handleTocImported = () => {
+    if (createdBook) {
+      onCreated(createdBook);
+    }
+    // リセット
+    setbookName("");
+    setImageUrl("");
+    setImageFile(null);
+    setCreatedBook(null);
+  };
 
   return (
     <>
@@ -91,6 +106,16 @@ export default function BookCreateDialog({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* 目次抽出ダイアログ */}
+      {createdBook && (
+        <TocExtractDialog
+          open={showTocDialog}
+          onOpenChange={setShowTocDialog}
+          bookId={createdBook.id}
+          onImported={handleTocImported}
+        />
+      )}
     </>
   );
 }
