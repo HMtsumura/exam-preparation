@@ -14,5 +14,7 @@ public class ExamCreateRequest {
     private Date examDate;
 
     private Integer estimatedDailyStudyHours;
+
+    private Integer estimatedStudyHours;
     // getters and setters
 }

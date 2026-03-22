@@ -79,8 +79,8 @@ public class ExamController {
         exam.setExamName(request.getExamName());
         exam.setExamDate(request.getExamDate());
         exam.setEstimatedDailyStudyHours(request.getEstimatedDailyStudyHours());
-        // TODO: openAiのapiで取得した値にする
-        exam.setEstimatedStudyHours(100);
+        // exam analyzerで取得した必要勉強時間を使用
+        exam.setEstimatedStudyHours(request.getEstimatedStudyHours() != null ? request.getEstimatedStudyHours() : 100);
         // TODO: ユーザー機能追加したら正しい値に変更
         exam.setUserId(1);
         exam.setStatus("scheduled");  // デフォルトステータスを設定

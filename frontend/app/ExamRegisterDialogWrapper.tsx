@@ -28,6 +28,7 @@ export default function ExamRegisterDialogWrapper({
     examName: string;
     estimatedDailyStudyHours: number;
     examDate: Date | undefined;
+    requiredStudyHours: number;
   }) => {
     if (!data.examDate) {
       alert("受験日を選択してください");
@@ -36,12 +37,14 @@ export default function ExamRegisterDialogWrapper({
     const examDate = data.examDate.toISOString();
     const examName = data.examName;
     const estimatedDailyStudyHours = data.estimatedDailyStudyHours;
+    const estimatedStudyHours = data.requiredStudyHours;
     const res = await fetch("/api/exams", {
       method: "POST",
       body: JSON.stringify({
         examName,
         examDate,
         estimatedDailyStudyHours,
+        estimatedStudyHours,
       }),
     });
 

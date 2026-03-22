@@ -27,6 +27,7 @@ type ExamRegisterDialogProps = {
     examName: string;
     estimatedDailyStudyHours: number;
     examDate: Date | undefined;
+    requiredStudyHours: number;
   }) => void | Promise<void>;
 };
 
@@ -110,6 +111,7 @@ export default function ExamRegisterDialog({
       examName,
       estimatedDailyStudyHours: Number(estimatedDailyStudyHours),
       examDate,
+      requiredStudyHours: examInfo?.requiredStudyHours || 0,
     });
     onOpenChange(false);
     setStep(1);
