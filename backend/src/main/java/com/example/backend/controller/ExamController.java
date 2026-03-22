@@ -72,7 +72,7 @@ public class ExamController {
 
     @PostMapping
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Exam> addExam(
+    public ResponseEntity<ExamResponse> addExam(
             @RequestBody ExamCreateRequest request
     ) throws IOException {
         Exam exam = new Exam();
@@ -83,9 +83,20 @@ public class ExamController {
         exam.setEstimatedStudyHours(100);
         // TODO: ユーザー機能追加したら正しい値に変更
         exam.setUserId(1);
-        examRepository.save(exam);
+        exam.setStatus("scheduled");  // デフォルトステータスを設定
+        Exam savedExam = examRepository.save(exam);
 
-        return ResponseEntity.ok(exam);
+        // ExamResponse を返す（progressPercent を含む）
+        ExamResponse response = new ExamResponse(
+                savedExam.getId(),
+                savedExam.getExamName(),
+                savedExam.getExamDate(),
+                0.0,  // 新規作成時は進捗0%
+                savedExam.getEstimatedStudyHours(),
+                savedExam.getStatus()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/analyze")
