@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import ImagePicker from "./ImagePicker";
 
 type TocItem = {
@@ -41,6 +42,7 @@ export default function TocExtractDialog({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [tocData, setTocData] = useState<TocData | null>(null);
   const [editedItems, setEditedItems] = useState<TocItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<boolean[]>([]);
@@ -56,6 +58,8 @@ export default function TocExtractDialog({
       setEditedItems([]);
       setSelectedItems([]);
       setError("");
+      setProgress(0);
+      setLoading(false);
       setStep("upload");
     }
   }, [open]);
@@ -67,25 +71,36 @@ export default function TocExtractDialog({
     }
 
     setLoading(true);
+    setProgress(0);
     setError("");
     setTocData(null);
+    setStep("preview"); // プレビューステップに移動 (ローディングUI を表示するため)
 
     try {
       const formData = new FormData();
       formData.append("file", imageFile);
+
+      // Simulate progress: 30% when sending request
+      setProgress(30);
 
       const res = await fetch("http://localhost:8080/api/books/extract-toc", {
         method: "POST",
         body: formData,
       });
 
+      // 70% when response received
+      setProgress(70);
+
       if (!res.ok) {
         throw new Error("目次の抽出に失敗しました");
       }
 
       const data: TocData = await res.json();
+      
+      // 100% when data processed
+      setProgress(100);
+      
       setTocData(data);
-      setStep("preview");
 
       // 編集用のアイテムを初期化
       setEditedItems(data.data.items);
@@ -98,6 +113,8 @@ export default function TocExtractDialog({
       );
     } finally {
       setLoading(false);
+      // Don't reset progress immediately so user can see 100%
+      setTimeout(() => setProgress(0), 500);
     }
   }
 
@@ -213,19 +230,38 @@ export default function TocExtractDialog({
         {step === "preview" && (
           <>
             {loading && (
-              <div className="flex justify-center items-center py-12">
+              <div className="flex flex-col justify-center items-center py-12 space-y-4">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                <span className="ml-4 text-gray-600">目次を抽出中...</span>
+                <div className="text-center">
+                  <p className="text-gray-600 mb-2">目次を抽出中...</p>
+                  <div className="flex items-center gap-2">
+                    <Progress value={progress} className="w-48 h-2" />
+                    <span className="text-sm font-medium text-gray-700 w-12 text-right">{progress}%</span>
+                  </div>
+                </div>
               </div>
             )}
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded p-4 text-red-800">
-                {error}
+            {!loading && error && (
+              <div className="space-y-4">
+                <div className="bg-red-50 border border-red-200 rounded p-4 text-red-800">
+                  {error}
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    onClick={() => {
+                      setError("");
+                      setStep("upload");
+                    }}
+                    variant="outline"
+                  >
+                    戻る
+                  </Button>
+                </div>
               </div>
             )}
 
-            {tocData && (
+            {!loading && tocData && (
               <div className="space-y-4">
                 <div className="bg-blue-50 border border-blue-200 rounded p-3">
                   <p className="text-sm text-gray-600">
@@ -341,7 +377,7 @@ export default function TocExtractDialog({
                     onClick={handleImport}
                     disabled={selectedItems.filter((item: boolean) => item).length === 0}
                   >
-                    {selectedItems.filter((item: boolean) => item).length} 個をインポート
+                    {selectedItems.filter((item: boolean) => item).length} 個を登録
                   </Button>
                 </div>
               </div>

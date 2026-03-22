@@ -32,7 +32,7 @@ export default function ImagePicker({ onChange, imageUrl }: ImagePickerProps) {
         {/* ホバーで表示される変更ボタン */}
         <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition">
           <span className="text-white text-sm">変更</span>
-          <input type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
+          <input type="file" accept="image/*,.heic,.heif" className="hidden" onChange={handleFileSelect} />
         </label>
 
         {imageUrl && (

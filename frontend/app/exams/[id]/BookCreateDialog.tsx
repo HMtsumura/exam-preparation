@@ -60,14 +60,15 @@ export default function BookCreateDialog({
   }
 
   const handleTocImported = () => {
-    if (createdBook) {
-      onCreated(createdBook);
-    }
     // リセット
     setbookName("");
     setImageUrl("");
     setImageFile(null);
     setCreatedBook(null);
+    // 親に通知
+    if (createdBook) {
+      onCreated(createdBook);
+    }
   };
 
   return (

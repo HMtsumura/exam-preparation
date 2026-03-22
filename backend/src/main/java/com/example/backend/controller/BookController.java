@@ -73,13 +73,17 @@ public class BookController {
     // 目次抽出エンドポイント
     @PostMapping("/extract-toc")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<?> extractTableOfContents(
+    public ResponseEntity<String> extractTableOfContents(
             @RequestParam MultipartFile file
     ) {
         try {
-            return ResponseEntity.ok(tocExtractorService.extractToc(file));
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(tocExtractorService.extractToc(file));
         } catch (IOException e) {
-            return ResponseEntity.badRequest().body("Error processing file: " + e.getMessage());
+            return ResponseEntity.badRequest()
+                    .header("Content-Type", "application/json")
+                    .body("{\"error\": \"Error processing file: " + e.getMessage() + "\"}");
         }
     }
 }
