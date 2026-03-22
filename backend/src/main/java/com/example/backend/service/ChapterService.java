@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.BulkChapterRequest;
 import com.example.backend.dto.ChapterWithStatusDto;
 import com.example.backend.dto.ProgressUpdateRequest;
 import com.example.backend.dto.StudyLogRequest;
@@ -82,11 +83,29 @@ public class ChapterService {
 
     public List<Chapter> createChaptersBulk(Integer bookId, List<String> titles) {
         List<Chapter> list = new ArrayList<>();
+        int orderNo = 1;
 
         for (String title : titles) {
             Chapter c = new Chapter();
             c.setBookId(bookId);
             c.setChapterTitle(title);
+            c.setOrderNo(orderNo++);
+            list.add(c);
+        }
+
+        return chapterRepository.saveAll(list);
+    }
+
+    public List<Chapter> createChaptersFromData(Integer bookId, List<BulkChapterRequest.ChapterData> chaptersData) {
+        List<Chapter> list = new ArrayList<>();
+        int orderNo = 1;
+        
+        for (BulkChapterRequest.ChapterData data : chaptersData) {
+            Chapter c = new Chapter();
+            c.setBookId(bookId);
+            c.setOrderNo(orderNo++);
+            c.setChapterTitle(data.getTitle());
+            
             list.add(c);
         }
 

@@ -67,13 +67,24 @@ public class ChapterController {
     }
 
     @PostMapping("/chapters/bulk")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<Chapter>> addChapters(
             @RequestBody BulkChapterRequest request) {
 
-        List<Chapter> created = chapterService.createChaptersBulk(
-                request.getBookId(),
-                request.getTitles()
-        );
+        List<Chapter> created;
+        
+        // If chapters data is provided, use it; otherwise fall back to titles
+        if (request.getChapters() != null && !request.getChapters().isEmpty()) {
+            created = chapterService.createChaptersFromData(
+                    request.getBookId(),
+                    new java.util.ArrayList<>(request.getChapters())
+            );
+        } else {
+            created = chapterService.createChaptersBulk(
+                    request.getBookId(),
+                    request.getTitles()
+            );
+        }
 
         return ResponseEntity.ok(created);
     }

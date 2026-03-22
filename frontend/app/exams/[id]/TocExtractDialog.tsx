@@ -126,7 +126,7 @@ export default function TocExtractDialog({
 
     // 選択された章をインポート
     try {
-      const res = await fetch("http://localhost:3000/api/chapters/bulk", {
+      const res = await fetch("http://localhost:8080/api/chapters/bulk", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
