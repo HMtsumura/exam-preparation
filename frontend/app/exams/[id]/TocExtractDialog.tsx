@@ -43,8 +43,8 @@ export default function TocExtractDialog({
   examId: number;
 }) {
   const router = useRouter();
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [importing, setImporting] = useState(false);
@@ -57,8 +57,8 @@ export default function TocExtractDialog({
   // ダイアログが閉じられた時にリセット
   useEffect(() => {
     if (!open) {
-      setImageFile(null);
-      setImageUrl("");
+      setImageFiles([]);
+      setImageUrls([]);
       setTocData(null);
       setEditedItems([]);
       setSelectedItems([]);
@@ -70,7 +70,7 @@ export default function TocExtractDialog({
   }, [open]);
 
   async function extractToc() {
-    if (!imageFile) {
+    if (imageFiles.length === 0) {
       setError("画像を選択してください");
       return;
     }
@@ -83,7 +83,10 @@ export default function TocExtractDialog({
 
     try {
       const formData = new FormData();
-      formData.append("file", imageFile);
+      // 複数の画像をすべて追加
+      imageFiles.forEach((file) => {
+        formData.append("files", file);
+      });
 
       // Simulate progress: 30% when sending request
       setProgress(30);
@@ -208,15 +211,16 @@ export default function TocExtractDialog({
 
             <div className="flex justify-center">
               <ImagePicker
-                imageUrl={imageUrl}
-                onChange={(file) => {
-                  if (file) {
-                    setImageUrl(URL.createObjectURL(file));
-                    setImageFile(file);
+                multiple
+                imageUrls={imageUrls}
+                onChange={(files) => {
+                  if (files.length > 0) {
+                    setImageFiles(files);
+                    setImageUrls(files.map((f) => URL.createObjectURL(f)));
                     setError("");
                   } else {
-                    setImageUrl("");
-                    setImageFile(null);
+                    setImageUrls([]);
+                    setImageFiles([]);
                   }
                 }}
               />
@@ -231,7 +235,7 @@ export default function TocExtractDialog({
               </Button>
               <Button
                 onClick={extractToc}
-                disabled={!imageFile || loading}
+                disabled={imageFiles.length === 0 || loading}
               >
                 {loading ? "抽出中..." : "目次を抽出"}
               </Button>

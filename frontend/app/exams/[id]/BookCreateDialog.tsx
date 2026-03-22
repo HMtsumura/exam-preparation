@@ -83,9 +83,10 @@ export default function BookCreateDialog({
           <div className="space-y-4">
             <div className="flex justify-center">
               <ImagePicker
-                imageUrl={imageUrl}
-                onChange={(file) => {
-                  if (file) {
+                imageUrls={imageUrl ? [imageUrl] : []}
+                onChange={(files) => {
+                  if (files.length > 0) {
+                    const file = files[0];
                     setImageUrl(URL.createObjectURL(file)); // 表示用
                     setImageFile(file); // サーバー送信用
                   } else {

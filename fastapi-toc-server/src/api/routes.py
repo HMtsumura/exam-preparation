@@ -3,23 +3,45 @@ from fastapi.responses import Response
 from services.toc_extractor import TOCExtractor
 from services.image_converter import ImageConverter
 import json
+from typing import List
 
 router = APIRouter()
 
 @router.post("/extract-toc/")
-async def extract_toc(file: UploadFile = File(...)):
+async def extract_toc(files: List[UploadFile] = File(...)):
     toc_extractor = TOCExtractor()
     image_converter = ImageConverter()
     try:
-        # Read file content
-        content = await file.read()
+        # 複数の画像ファイルから目次を抽出
+        all_items = []
         
-        # Convert HEIC to PNG if needed
-        converted_content = image_converter.convert_if_needed(content, file.filename)
+        for file in files:
+            content = await file.read()
+            
+            # Convert HEIC to PNG if needed
+            converted_content = image_converter.convert_if_needed(content, file.filename)
+            
+            # Extract TOC
+            toc_data = toc_extractor.extract_toc(converted_content)
+            
+            # アイテムをマージ
+            if toc_data.get("items"):
+                all_items.extend(toc_data["items"])
         
-        # Extract TOC
-        toc_data = toc_extractor.extract_toc(converted_content)
-        response_data = {"status": "success", "data": toc_data}
+        # チャプター番号を再附番
+        for idx, item in enumerate(all_items, 1):
+            if "chapter_number" not in item or not item["chapter_number"]:
+                item["chapter_number"] = str(idx)
+        
+        response_data = {
+            "status": "success",
+            "data": {
+                "status": "success",
+                "title": files[0].filename if files else "Unknown",
+                "items": all_items,
+                "total_items": len(all_items)
+            }
+        }
         return Response(content=json.dumps(response_data, ensure_ascii=False), media_type="application/json")
     except Exception as e:
         response_data = {"status": "error", "message": str(e)}

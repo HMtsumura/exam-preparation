@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class TocExtractorService {
@@ -31,9 +32,9 @@ public class TocExtractorService {
     }
 
     /**
-     * FastAPI サーバーに画像を送信して、目次を抽出する
+     * FastAPI サーバーに複数の画像を送信して、目次を抽出する
      */
-    public String extractToc(MultipartFile file) throws IOException {
+    public String extractToc(List<MultipartFile> files) throws IOException {
         String tocServerEndpoint = tocServerUrl + "/extract-toc/";
 
         // マルチパートリクエストを構築
@@ -41,7 +42,10 @@ public class TocExtractorService {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", new MultipartFileResource(file));
+        // 複数のファイルを追加
+        for (MultipartFile file : files) {
+            body.add("files", new MultipartFileResource(file));
+        }
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 

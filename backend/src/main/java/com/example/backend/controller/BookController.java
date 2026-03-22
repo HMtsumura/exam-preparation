@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,16 +75,16 @@ public class BookController {
     @PostMapping("/extract-toc")
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> extractTableOfContents(
-            @RequestParam MultipartFile file
+            @RequestParam("files") List<MultipartFile> files
     ) {
         try {
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
-                    .body(tocExtractorService.extractToc(file));
+                    .body(tocExtractorService.extractToc(files));
         } catch (IOException e) {
             return ResponseEntity.badRequest()
                     .header("Content-Type", "application/json")
-                    .body("{\"error\": \"Error processing file: " + e.getMessage() + "\"}");
+                    .body("{\"error\": \"Error processing files: " + e.getMessage() + "\"}");
         }
     }
 }
