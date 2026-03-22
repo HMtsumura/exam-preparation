@@ -79,6 +79,7 @@ export const EXAM_MASTERS: ExamMaster[] = [
   /* =====================
    * 英語・語学
    * ===================== */
+  { id: "jlpt", name: "日本語能力試験", category: "Language", aliases: ["JLPT", "日本語能力", "日本語"] },
   { id: "toeic", name: "TOEIC L&R", category: "Language" },
   { id: "toefl", name: "TOEFL iBT", category: "Language" },
   { id: "ielts", name: "IELTS", category: "Language" },

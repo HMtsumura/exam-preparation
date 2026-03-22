@@ -2,10 +2,16 @@ from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import Response
 from services.toc_extractor import TOCExtractor
 from services.image_converter import ImageConverter
+from services.exam_analyzer import ExamAnalyzer
 import json
 from typing import List
+from pydantic import BaseModel
 
 router = APIRouter()
+
+class ExamAnalysisRequest(BaseModel):
+    exam_name: str
+    daily_study_hours: float
 
 @router.post("/extract-toc/")
 async def extract_toc(files: List[UploadFile] = File(...)):
@@ -75,3 +81,21 @@ async def debug_ocr(file: UploadFile = File(...)):
 
 def setup_routes(app):
     app.include_router(router)
+
+@router.post("/analyze-exam/")
+async def analyze_exam(request: ExamAnalysisRequest):
+    """試験情報を分析するエンドポイント"""
+    exam_analyzer = ExamAnalyzer()
+    try:
+        analysis_result = exam_analyzer.analyze_exam(
+            request.exam_name,
+            request.daily_study_hours
+        )
+        response_data = {
+            "status": "success",
+            "data": analysis_result
+        }
+        return Response(content=json.dumps(response_data, ensure_ascii=False), media_type="application/json")
+    except Exception as e:
+        response_data = {"status": "error", "message": str(e)}
+        return Response(content=json.dumps(response_data, ensure_ascii=False), media_type="application/json", status_code=400)

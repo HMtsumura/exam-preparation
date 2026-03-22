@@ -3,12 +3,14 @@ package com.example.backend.controller;
 import com.example.backend.dto.BookResponse;
 import com.example.backend.dto.ExamCreateRequest;
 import com.example.backend.dto.ExamResponse;
+import com.example.backend.dto.ExamAnalysisRequest;
 import com.example.backend.entity.Book;
 import com.example.backend.entity.Exam;
 import com.example.backend.repository.BookRepository;
 import com.example.backend.repository.ExamRepository;
 import com.example.backend.service.BookService;
 import com.example.backend.service.ExamService;
+import com.example.backend.service.ExamAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,15 +33,18 @@ public class ExamController {
 
     private final BookService bookService;
 
+    private final ExamAnalysisService examAnalysisService;
+
     @Autowired
     private ExamRepository examRepository;
 
     @Autowired
     private BookRepository bookRepository;
 
-    public ExamController(ExamService examService, BookService bookService) {
+    public ExamController(ExamService examService, BookService bookService, ExamAnalysisService examAnalysisService) {
         this.examService = examService;
         this.bookService = bookService;
+        this.examAnalysisService = examAnalysisService;
     }
 
     // 全試験取得 TODO: user毎に取得できるように
@@ -81,5 +86,17 @@ public class ExamController {
         examRepository.save(exam);
 
         return ResponseEntity.ok(exam);
-    };
+    }
+
+    @PostMapping("/analyze")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<?> analyzeExam(@RequestBody ExamAnalysisRequest request) {
+        try {
+            var result = examAnalysisService.analyzeExam(request.getExamName(), request.getDailyStudyHours());
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error analyzing exam: " + e.getMessage());
+        }
+    }
 }
+

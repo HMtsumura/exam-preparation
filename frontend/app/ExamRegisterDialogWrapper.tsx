@@ -33,7 +33,7 @@ export default function ExamRegisterDialogWrapper({
       alert("受験日を選択してください");
       return;
     }
-    const examDate = data.examDate.toISOString().split("T")[0];
+    const examDate = data.examDate.toISOString();
     const examName = data.examName;
     const estimatedDailyStudyHours = data.estimatedDailyStudyHours;
     const res = await fetch("/api/exams", {
