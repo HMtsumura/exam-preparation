@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { Numerals } from "react-day-picker";
 import BookList from "./BookList";
 import ExamPaceStatus from "./ExamPaceStatus";
+import { Button } from "@/components/ui/button";
 
 // app/exams/[id]/page.tsx
 type Exam = {
@@ -35,6 +37,9 @@ export default async function ExamDetailPage({ params }: Props) {
   const books: Book[] = await booksRes.json();
   return (
     <div>
+      <Link href="/">
+        <Button variant="outline" className="mb-4">← 一覧に戻る</Button>
+      </Link>
       <h1>試験詳細</h1>
       <p>ID: {exam.id}</p>
       <p>試験名: {exam.examName}</p>
