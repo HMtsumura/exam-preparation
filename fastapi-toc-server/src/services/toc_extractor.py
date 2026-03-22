@@ -76,19 +76,35 @@ class TOCExtractor:
                                 "type": "text",
                                 "text": """Extract the table of contents from this image and return as JSON format.
 
-For each table of contents entry, extract:
-- chapter_number: The chapter/section number (e.g., "1.1", "第1章", etc.)
+For each table of contents entry, identify the hierarchy level and extract:
+- chapter_number: The chapter/section number (e.g., "1.1", "第1章", "1-1", etc.)
 - title: The title/name of the chapter/section
 - page_number: The page number where it starts
+- level: The hierarchy level (1 for main chapters, 2+ for subsections)
+- parent_title: (Optional) The parent section title if this is a subsection
 
 Do NOT include dots, ellipses (...), or decorative elements in the title.
+
+Detect hierarchy by:
+- Indentation/formatting in the TOC
+- Number patterns (e.g., "1", "1.1", "1.1.1")
+- Text size/styling differences
 
 Return ONLY a valid JSON array with the following structure:
 [
   {
     "chapter_number": "...",
     "title": "...",
-    "page_number": number
+    "page_number": number,
+    "level": 1,
+    "parent_title": null
+  },
+  {
+    "chapter_number": "...",
+    "title": "...",
+    "page_number": number,
+    "level": 2,
+    "parent_title": "Parent Title"
   },
   ...
 ]"""

@@ -17,6 +17,8 @@ type TocItem = {
   chapter_number: string;
   title: string;
   page_number: number;
+  level?: number;
+  parent_title?: string | null;
 };
 
 type TocData = {
@@ -69,6 +71,23 @@ export default function TocExtractDialog({
     }
   }, [open]);
 
+  // 階層構造のアイテムをフラット化し、タイトルに章番号を含める
+  function flattenAndFormatTocItems(items: TocItem[]): TocItem[] {
+    const flattened: TocItem[] = [];
+    
+    for (const item of items) {
+      // タイトルを整形（章番号: タイトル形式）
+      let formattedTitle = `${item.chapter_number}: ${item.title}`;
+      
+      flattened.push({
+        ...item,
+        title: formattedTitle
+      });
+    }
+    
+    return flattened;
+  }
+
   async function extractToc() {
     if (imageFiles.length === 0) {
       setError("画像を選択してください");
@@ -110,11 +129,12 @@ export default function TocExtractDialog({
       
       setTocData(data);
 
-      // 編集用のアイテムを初期化
-      setEditedItems(data.data.items);
+      // 編集用のアイテムを初期化（タイトルを整形）
+      const formattedItems = flattenAndFormatTocItems(data.data.items);
+      setEditedItems(formattedItems);
 
       // 最初はすべての章を選択状態にする
-      setSelectedItems(new Array(data.data.items.length).fill(true));
+      setSelectedItems(new Array(formattedItems.length).fill(true));
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "予期しないエラーが発生しました"
@@ -199,7 +219,9 @@ export default function TocExtractDialog({
           <div className="space-y-4">
             <div className="bg-blue-50 border border-blue-200 rounded p-3">
               <p className="text-sm text-gray-600">
-                目次が掲載されているページの画像を選択してください
+                {imageFiles.length > 0
+                  ? `${imageFiles.length}個の画像を選択済み。さらに追加するか、すべてクリアしてから新しく選択できます`
+                  : "目次が掲載されているページの画像を選択してください"}
               </p>
             </div>
 
@@ -215,16 +237,31 @@ export default function TocExtractDialog({
                 imageUrls={imageUrls}
                 onChange={(files) => {
                   if (files.length > 0) {
-                    setImageFiles(files);
-                    setImageUrls(files.map((f) => URL.createObjectURL(f)));
+                    // 既存の画像と新しい画像をマージ
+                    const mergedFiles = [...imageFiles, ...files];
+                    const mergedUrls = [...imageUrls, ...files.map((f) => URL.createObjectURL(f))];
+                    setImageFiles(mergedFiles);
+                    setImageUrls(mergedUrls);
                     setError("");
-                  } else {
-                    setImageUrls([]);
-                    setImageFiles([]);
                   }
                 }}
               />
             </div>
+
+            {imageFiles.length > 0 && (
+              <div className="flex gap-2 pt-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setImageFiles([]);
+                    setImageUrls([]);
+                  }}
+                >
+                  すべてクリア
+                </Button>
+              </div>
+            )}
 
             <div className="flex gap-2 justify-end pt-4">
               <Button
@@ -327,18 +364,6 @@ export default function TocExtractDialog({
                           <div className="flex gap-2 items-center">
                             <input
                               type="text"
-                              value={item.chapter_number}
-                              onChange={(e: any) => {
-                                const newItems = [...editedItems];
-                                newItems[index].chapter_number = e.target.value;
-                                setEditedItems(newItems);
-                              }}
-                              placeholder="章番号"
-                              className="w-20 px-2 py-1 text-sm border rounded bg-white"
-                              onClick={(e: any) => e.stopPropagation()}
-                            />
-                            <input
-                              type="text"
                               value={item.title}
                               onChange={(e: any) => {
                                 const newItems = [...editedItems];
@@ -388,6 +413,12 @@ export default function TocExtractDialog({
                     onClick={() => setStep("upload")}
                   >
                     戻る
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setStep("upload")}
+                  >
+                    追加で抽出
                   </Button>
                   <Button
                     onClick={handleImport}
