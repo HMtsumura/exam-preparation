@@ -114,6 +114,7 @@ export default function BookCreateDialog({
           open={showTocDialog}
           onOpenChange={setShowTocDialog}
           bookId={createdBook.id}
+          examId={examId}
           onImported={handleTocImported}
         />
       )}

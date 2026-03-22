@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -33,16 +34,20 @@ export default function TocExtractDialog({
   onOpenChange,
   bookId,
   onImported,
+  examId,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   bookId: number;
   onImported: () => void;
+  examId: number;
 }) {
+  const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [importing, setImporting] = useState(false);
   const [tocData, setTocData] = useState<TocData | null>(null);
   const [editedItems, setEditedItems] = useState<TocItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<boolean[]>([]);
@@ -126,6 +131,7 @@ export default function TocExtractDialog({
 
     // 選択された章をインポート
     try {
+      setImporting(true);
       const res = await fetch("http://localhost:8080/api/chapters/bulk", {
         method: "POST",
         headers: {
@@ -143,10 +149,16 @@ export default function TocExtractDialog({
 
       onOpenChange(false);
       onImported();
+
+      // ダイアログが閉じるアニメーションの後に遷移
+      setTimeout(() => {
+        router.push(`/books/${bookId}`);
+      }, 300);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "章のインポートに失敗しました"
       );
+      setImporting(false);
     }
   }
 

@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import "react-circular-progressbar/dist/styles.css";
 import BookCreateDialog from "./BookCreateDialog";
-import ChapterCreateDialog from "./ChapterCreateDialog";
 import {
   Card,
   CardContent,
@@ -31,8 +30,6 @@ export default function BookList({
 }) {
   const [books, setBooks] = useState<Book[]>(initialBooks);
   const [bookCreateOpen, setBookCreateOpen] = useState(false);
-  const [chapterCreateOpen, setChapterCreateOpen] = useState(false);
-  const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
 
   const fetchBooks = async () => {
     const res = await fetch(`http://localhost:3000/api/exams/${examId}/books`);
@@ -44,12 +41,6 @@ export default function BookList({
     setBooks((prev) => [...prev, book]);
     // 書籍作成ダイアログを閉じる
     setBookCreateOpen(false);
-
-    // BookID を保持
-    setSelectedBookId(book.id);
-
-    // 章作成ダイアログを「自動で開く！」
-    setChapterCreateOpen(true);
   };
 
   function formatMinutes(minutes: number) {
@@ -132,11 +123,6 @@ export default function BookList({
           console.log("新しく作成された Book ID:", book);
           handleCreated(book);
         }}
-      />
-      <ChapterCreateDialog
-        bookId={selectedBookId}
-        open={chapterCreateOpen}
-        onOpenChange={setChapterCreateOpen}
       />
     </ul>
   );
